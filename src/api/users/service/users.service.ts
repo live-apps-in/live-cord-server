@@ -1,4 +1,5 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
+import { Types } from 'mongoose';
 import { UserRepository } from 'src/api/users/repository/users.repository';
 import { CreateUserDto } from 'src/api/users/_dto/CreateUserDto';
 
@@ -14,5 +15,9 @@ export class UserService {
     if (getUser) throw new HttpException('User Already Exists', 400);
 
     return await this.userRepo.create(payload);
+  }
+
+  async profile(userId: Types.ObjectId) {
+    return await this.userRepo.findById(userId);
   }
 }

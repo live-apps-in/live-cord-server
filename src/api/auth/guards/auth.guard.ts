@@ -22,7 +22,6 @@ export class AuthGuard implements NestMiddleware {
         userId: apps.live_cord.userId,
       };
 
-      console.log(req.userData);
       next();
     } catch (err) {
       console.log(err);

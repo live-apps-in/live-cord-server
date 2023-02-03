@@ -4,8 +4,15 @@ export default {
     // baseURL: 'https://kittychan.jagalive.in',
     baseURL: 'http://127.0.0.1:5000',
     actions: {
+      //Fetch Discord Profile
       profile: {
         route: '/live_cord/user/profile',
+        method: 'POST',
+      },
+
+      //Send Direct Message
+      send_direct_message: {
+        route: '/live_cord/user/send_message',
         method: 'POST',
       },
     },

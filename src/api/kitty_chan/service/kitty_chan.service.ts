@@ -9,12 +9,12 @@ export class KittychanService {
   ) {}
 
   ///Fetch User Profile (Discord)
-  async profile(kitty_chan_username: string) {
+  async profile(discord_username: string) {
     const getProfile = await this.axiosService.handle({
       scope: BOTS.kitty_chan,
       action: 'profile',
       body: {
-        kitty_chan_username,
+        discord_username,
       },
     });
 
@@ -22,5 +22,16 @@ export class KittychanService {
   }
 
   ///DM User
-  async send_message(discord_username: string, message: string) {}
+  async send_message(discord_username: string, message: string) {
+    const triggerAPI = await this.axiosService.handle({
+      scope: BOTS.kitty_chan,
+      action: 'send_direct_message',
+      body: {
+        discord_username,
+        message,
+      },
+    });
+
+    console.log(triggerAPI);
+  }
 }

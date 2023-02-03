@@ -20,7 +20,7 @@ export class UserService {
     const userSavePayload = new InternalCreateUserDto(
       payload.name,
       payload.email,
-      { username: payload.kitty_chan_username, isVerified: false },
+      { username: payload.discord_username, isVerified: false },
     );
 
     return await this.userRepo.create(userSavePayload);

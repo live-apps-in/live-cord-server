@@ -19,6 +19,7 @@ import { AxiosService } from 'src/shared/axios.service';
     AxiosService,
     ...usersProvider,
   ],
+  exports: [UserRepository],
 })
 export class UserModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

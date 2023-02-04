@@ -62,7 +62,8 @@ export class AxiosService {
     ///Fetch and build Headers(Auth)
     const getInternalToken = await this.createAccessToken(
       'kitty_chan',
-      payload.body.kitty_chan_username,
+      payload.body.discord_username,
+      payload.body.discord_id,
     );
     const getHeader = APIConfig.kitty_chan.header(getInternalToken);
 
@@ -77,10 +78,14 @@ export class AxiosService {
     return axiosConfig;
   }
 
-  private createAccessToken(scope: string, kitty_chan_username: string): any {
+  private createAccessToken(
+    scope: string,
+    discord_username: string,
+    discord_id: string | null,
+  ): any {
     return new Promise((res, rej) => {
       const accessToken = jwt.sign(
-        { scope, kitty_chan_username },
+        { scope, discord_username, discord_id },
         process.env.INTERNAL_MS_SECRET,
         { expiresIn: '60s' },
       );

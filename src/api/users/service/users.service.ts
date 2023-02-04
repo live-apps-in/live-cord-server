@@ -1,6 +1,7 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
 import { IAuth } from 'src/api/auth/model/auth.model';
+import { IGuild } from 'src/api/guild/model/guild.model';
 import { KittychanService } from 'src/api/kitty_chan/service/kitty_chan.service';
 import { UserRepository } from 'src/api/users/repository/users.repository';
 import {
@@ -16,8 +17,10 @@ export class UserService {
     @Inject(KittychanService)
     private readonly kittychanService: KittychanService,
     @Inject(TYPES.AuthModel) private readonly Auth: Model<IAuth>,
+    @Inject(TYPES.GuildModel) private readonly Guild: Model<IGuild>,
   ) {}
 
+  ///Create LiveCord User
   async create(payload: CreateUserDto) {
     ///Check User Duplication
     const getUser = await this.userRepo.findByEmail(payload.email);
@@ -48,9 +51,48 @@ export class UserService {
     return createUser;
   }
 
+  ////Fetch LiveCord Profile
   async profile(userId: Types.ObjectId) {
     const user = await this.userRepo.findById(userId);
     if (!user) throw new HttpException('User not found', 400);
     return user;
+  }
+
+  ///Extract Discord and guild Permission
+  async fetchPermission(userId: Types.ObjectId, guildId: string) {
+    const user = await this.userRepo.findById(userId);
+    if (!user) throw new HttpException('user not found', 400);
+
+    const userPermission: any = {
+      hasPermission: true,
+      discord_id: null,
+      guildId,
+    };
+
+    ///If Discord Profile not verified
+    if (!user.discord?.id && !user.discord.isVerified) {
+      userPermission.hasPermission = false;
+      userPermission.error = {
+        message: 'Discord Profile not verified',
+      };
+      return userPermission;
+    }
+
+    const checkGuildPermission = await this.Guild.countDocuments({
+      guildId,
+      ownerId: user.discord.id,
+    });
+
+    ///If no sufficient permission
+    if (checkGuildPermission === 0) {
+      userPermission.hasPermission = false;
+      userPermission.error = {
+        message: 'Forbidden Guild Access',
+      };
+      return userPermission;
+    }
+
+    userPermission.discord_id = user.discord.id;
+    return userPermission;
   }
 }

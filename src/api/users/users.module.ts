@@ -2,6 +2,7 @@ import { MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common';
 import { Module } from '@nestjs/common/decorators';
 import { AuthGuard, InternalAuthGuard } from 'src/api/auth/guards/auth.guard';
 import { authProviders } from 'src/api/auth/model/auth.provider';
+import { guildProvider } from 'src/api/guild/model/guild.provider';
 import { KittychanService } from 'src/api/kitty_chan/service/kitty_chan.service';
 import { UserController } from 'src/api/users/controller/users.controller';
 import { usersProvider } from 'src/api/users/model/users.provider';
@@ -20,8 +21,9 @@ import { AxiosService } from 'src/shared/axios.service';
     AxiosService,
     ...usersProvider,
     ...authProviders,
+    ...guildProvider,
   ],
-  exports: [UserRepository],
+  exports: [UserService, UserRepository],
 })
 export class UserModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

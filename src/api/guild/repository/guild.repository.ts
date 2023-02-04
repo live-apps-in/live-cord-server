@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { IGuild } from 'src/api/guild/model/guild.model';
 import { TYPES } from 'src/core/types';
 
@@ -12,5 +12,10 @@ export class GuildRepository {
   async create(payload: any) {
     const guild = new this.Guild(payload);
     return await guild.save();
+  }
+
+  async getByUserId(userId: string) {
+    const guilds = await this.Guild.find({ ownerId: userId });
+    return guilds;
   }
 }

@@ -6,6 +6,7 @@ import 'dotenv/config';
 export class AuthGuard implements NestMiddleware {
   use(req: any, res: any, next: () => void) {
     const token: string = req.headers.authorization.split(' ')[1];
+    console.log(req.headers);
     if (!token) {
       return res.status(401).send('Access Denied. No Token Provided.');
     }

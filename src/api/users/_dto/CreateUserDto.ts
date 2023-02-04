@@ -15,6 +15,7 @@ export class InternalCreateUserDto {
     public name: string,
     public email: string,
     public discord: {
+      id?: string;
       username: string;
       isVerified: boolean;
     },

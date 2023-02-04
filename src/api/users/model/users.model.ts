@@ -7,6 +7,7 @@ export const UserSchema = new Schema({
 });
 
 export interface IUser {
+  _id: string;
   name: string;
   email: string;
   discord: any;

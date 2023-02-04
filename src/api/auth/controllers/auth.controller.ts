@@ -1,4 +1,4 @@
-import { Controller, Get, Inject, Request } from '@nestjs/common';
+import { Controller, Get, Post, Inject, Request } from '@nestjs/common';
 import { AuthService } from 'src/api/auth/service/auth.service';
 import { Req } from 'src/core/custom_types';
 
@@ -6,9 +6,19 @@ import { Req } from 'src/core/custom_types';
 export class AuthController {
   constructor(@Inject(AuthService) private readonly authService: AuthService) {}
 
+  ///Send OTP for Discord Profile Validation
   @Get('/discord/send_otp')
-  async auth(@Request() req: Req) {
+  async send_otp_discord(@Request() req: Req) {
     const { userId } = req.userData;
-    return await this.authService.send_otp(userId);
+    return await this.authService.send_otp_discord(userId);
+  }
+
+  ///Validate OTP for Discord Profile Validation
+  @Post('discord/otp/validate')
+  async validate_otp_discord(@Request() req: Req) {
+    const { userId } = req.userData;
+    const { otp } = req.body;
+
+    return await this.authService.validate_otp_discord(userId, otp);
   }
 }

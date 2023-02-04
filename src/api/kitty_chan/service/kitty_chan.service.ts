@@ -32,6 +32,6 @@ export class KittychanService {
       },
     });
 
-    console.log(triggerAPI);
+    return triggerAPI;
   }
 }

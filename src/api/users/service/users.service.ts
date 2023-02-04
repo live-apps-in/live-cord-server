@@ -1,11 +1,13 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
-import { Types } from 'mongoose';
+import { Model, Types } from 'mongoose';
+import { IAuth } from 'src/api/auth/model/auth.model';
 import { KittychanService } from 'src/api/kitty_chan/service/kitty_chan.service';
 import { UserRepository } from 'src/api/users/repository/users.repository';
 import {
   CreateUserDto,
   InternalCreateUserDto,
 } from 'src/api/users/_dto/CreateUserDto';
+import { TYPES } from 'src/core/types';
 
 @Injectable()
 export class UserService {
@@ -13,6 +15,7 @@ export class UserService {
     @Inject(UserRepository) private readonly userRepo: UserRepository,
     @Inject(KittychanService)
     private readonly kittychanService: KittychanService,
+    @Inject(TYPES.AuthModel) private readonly Auth: Model<IAuth>,
   ) {}
 
   async create(payload: CreateUserDto) {
@@ -41,6 +44,7 @@ export class UserService {
     );
 
     const createUser = await this.userRepo.create(userSavePayload);
+    await this.Auth.insertMany({ userId: createUser._id });
     return createUser;
   }
 

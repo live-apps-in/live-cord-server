@@ -22,4 +22,13 @@ export class UserRepository {
     const user = await this.user.findOne({ email });
     return user;
   }
+
+  async update(_id: Types.ObjectId, payload: any) {
+    await this.user.updateOne(
+      { _id },
+      {
+        $set: { ...payload },
+      },
+    );
+  }
 }

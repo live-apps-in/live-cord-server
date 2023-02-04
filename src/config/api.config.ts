@@ -16,8 +16,8 @@ export default {
       },
 
       //**Features**//
-      view_guild_features: {
-        route: '/live_cord/guild/features',
+      guild_profile: {
+        route: '/live_cord/guild/profile',
         method: 'POST',
       },
     },

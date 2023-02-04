@@ -27,7 +27,7 @@ export class KittyGuildService {
 
     const getFeature = await this.axiosService.handle({
       scope: BOTS.kitty_chan,
-      action: 'view_guild_features',
+      action: 'guild_profile',
       body: {
         guildId,
         discord_id: fetchPermission.discord_id,

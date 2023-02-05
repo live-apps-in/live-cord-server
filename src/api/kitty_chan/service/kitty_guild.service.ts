@@ -14,7 +14,6 @@ export class KittyGuildService {
     @Inject(UserService) private readonly userService: UserService,
   ) {}
 
-  ////**Features**////
   ///Get Guild Profile
   async getProfile(userId: Types.ObjectId, guildId: string) {
     ///Validate Permission
@@ -35,5 +34,33 @@ export class KittyGuildService {
     });
 
     return getFeature;
+  }
+
+  ////**Features**////
+  async edit_guild_feature(
+    userId: Types.ObjectId,
+    guildId: string,
+    features: any,
+  ) {
+    ///Validate Permission
+    const fetchPermission = await this.userService.fetchPermission(
+      userId,
+      guildId,
+    );
+
+    if (!fetchPermission.hasPermission)
+      throw new HttpException({ error: fetchPermission.error }, 400);
+
+    const editFeature = await this.axiosService.handle({
+      scope: BOTS.kitty_chan,
+      action: 'edit_guild_feature',
+      body: {
+        guildId,
+        discord_id: fetchPermission.discord_id,
+        features,
+      },
+    });
+
+    return await editFeature;
   }
 }

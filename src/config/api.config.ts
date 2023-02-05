@@ -15,10 +15,14 @@ export default {
         method: 'POST',
       },
 
-      //**Features**//
+      //**Guild**//
       guild_profile: {
         route: '/live_cord/guild/profile',
         method: 'POST',
+      },
+      edit_guild_feature: {
+        route: '/live_cord/guild/features',
+        method: 'PATCH',
       },
     },
     header: (jwt: string) => {

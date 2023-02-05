@@ -39,6 +39,7 @@ export class AxiosService {
       .then((res) => (resData = res.data))
       .catch((err) => {
         console.log(err.message);
+        throw new HttpException('Bad Request - Internal API fail', 400);
         // console.log(err);
       });
     return resData;

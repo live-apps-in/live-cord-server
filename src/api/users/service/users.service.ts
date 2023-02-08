@@ -57,42 +57,4 @@ export class UserService {
     if (!user) throw new HttpException('User not found', 400);
     return user;
   }
-
-  ///Extract Discord and guild Permission
-  async fetchPermission(userId: Types.ObjectId, guildId: string) {
-    const user = await this.userRepo.findById(userId);
-    if (!user) throw new HttpException('user not found', 400);
-
-    const userPermission: any = {
-      hasPermission: true,
-      discord_id: null,
-      guildId,
-    };
-
-    ///If Discord Profile not verified
-    if (!user.discord?.id && !user.discord.isVerified) {
-      userPermission.hasPermission = false;
-      userPermission.error = {
-        message: 'Discord Profile not verified',
-      };
-      return userPermission;
-    }
-
-    const checkGuildPermission = await this.Guild.countDocuments({
-      guildId,
-      ownerId: user.discord.id,
-    });
-
-    ///If no sufficient permission
-    if (checkGuildPermission === 0) {
-      userPermission.hasPermission = false;
-      userPermission.error = {
-        message: 'Forbidden Guild Access',
-      };
-      return userPermission;
-    }
-
-    userPermission.discord_id = user.discord.id;
-    return userPermission;
-  }
 }

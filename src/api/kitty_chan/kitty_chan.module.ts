@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
+import { GuildModule } from 'src/api/guild/guild.module';
 import { KittychanService } from 'src/api/kitty_chan/service/kitty_chan.service';
 import { KittyGuildService } from 'src/api/kitty_chan/service/kitty_guild.service';
 import { UserModule } from 'src/api/users/users.module';
 import { AxiosService } from 'src/shared/axios.service';
 
 @Module({
-  imports: [UserModule],
+  imports: [UserModule, GuildModule],
   controllers: [],
   providers: [KittychanService, KittyGuildService, AxiosService],
   exports: [KittychanService, KittyGuildService],

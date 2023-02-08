@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions';
 import { Types } from 'mongoose';
+import { GuildService } from 'src/api/guild/service/guild.service';
 import { UserRepository } from 'src/api/users/repository/users.repository';
 import { UserService } from 'src/api/users/service/users.service';
 import { BOTS } from 'src/core/constants';
@@ -11,13 +12,13 @@ export class KittyGuildService {
   constructor(
     @Inject(AxiosService) private readonly axiosService: AxiosService,
     @Inject(UserRepository) private readonly userRepo: UserRepository,
-    @Inject(UserService) private readonly userService: UserService,
+    @Inject(GuildService) private readonly guildService: GuildService,
   ) {}
 
   ///Get Guild Profile
   async getProfile(userId: Types.ObjectId, guildId: string) {
     ///Validate Permission
-    const fetchPermission = await this.userService.fetchPermission(
+    const fetchPermission = await this.guildService.fetchPermission(
       userId,
       guildId,
     );
@@ -43,7 +44,7 @@ export class KittyGuildService {
     features: any,
   ) {
     ///Validate Permission
-    const fetchPermission = await this.userService.fetchPermission(
+    const fetchPermission = await this.guildService.fetchPermission(
       userId,
       guildId,
     );

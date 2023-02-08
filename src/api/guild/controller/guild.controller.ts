@@ -25,6 +25,10 @@ export class GuildController {
     return await this.guildConfigService.getProfile(userId, params.guildId);
   }
 
+  //**Admin**//
+  @Patch('/:guildId/admin/:action')
+  async guid_admin(@Request() req: Req, @Param() params: any) {}
+
   //**Features**//
   @Patch('/features')
   async edit_guild_feature(@Request() req: Req) {

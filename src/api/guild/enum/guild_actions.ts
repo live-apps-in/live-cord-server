@@ -1,0 +1,4 @@
+export enum GUILD_ACTIONS {
+  ADD_ADMIN = 'ADD_ADMIN',
+  REMOVE_ADMIN = 'REMOVE_ADMIN',
+}

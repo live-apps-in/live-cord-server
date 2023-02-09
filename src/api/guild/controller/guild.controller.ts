@@ -1,5 +1,7 @@
 import { Controller, Get, Inject, Request, Param, Patch } from '@nestjs/common';
+import { GUILD_ACTIONS } from 'src/api/guild/enum/guild_actions';
 import { GuildService } from 'src/api/guild/service/guild.service';
+import { EditGuildAdminDto } from 'src/api/guild/_dto/GuildAdmin.dto';
 import { KittyGuildService } from 'src/api/kitty_chan/service/kitty_guild.service';
 import { Req } from 'src/core/custom_types';
 
@@ -27,10 +29,21 @@ export class GuildController {
 
   //**Admin**//
   //Add or remove admin from guild
-  @Patch('/:guildId/admin/:action')
+  @Patch('/:guildId/admin/:adminId/:action')
   async guid_admin(@Request() req: Req, @Param() params: any) {
     const { userId } = req.userData;
-    const { guildId, action } = params;
+    const { guildId, adminId, action } = params;
+
+    ///Build and Validate Payload
+    const editGuildAdminPayload = new EditGuildAdminDto(
+      guildId,
+      userId,
+      adminId,
+      action as GUILD_ACTIONS,
+    );
+    editGuildAdminPayload.validateAction();
+
+    return await this.guildService.edit_guild_admin(editGuildAdminPayload);
   }
 
   //**Features**//

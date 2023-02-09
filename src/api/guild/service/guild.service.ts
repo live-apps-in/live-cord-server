@@ -28,7 +28,7 @@ export class GuildService {
       throw new HttpException('Forbidden Guild Access', 403);
   }
 
-  ///Map and find guild with Owner privilege
+  ///Find Guilds under a user and map permissions
   async get_guild_by_userId(userId: Types.ObjectId) {
     const user = await this.userRepo.findById(userId);
     if (!user) throw new HttpException('User not found', 400);
@@ -37,7 +37,7 @@ export class GuildService {
     if (!discord_id)
       throw new HttpException('Discord Profile not verified yet!', 400);
 
-    return await this.guildRepo.getByUserId(discord_id);
+    return await this.guildRepo.getUserGuild(discord_id);
   }
 
   ///Extract Discord and guild Permission

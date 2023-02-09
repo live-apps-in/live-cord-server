@@ -26,8 +26,12 @@ export class GuildController {
   }
 
   //**Admin**//
+  //Add or remove admin from guild
   @Patch('/:guildId/admin/:action')
-  async guid_admin(@Request() req: Req, @Param() params: any) {}
+  async guid_admin(@Request() req: Req, @Param() params: any) {
+    const { userId } = req.userData;
+    const { guildId, action } = params;
+  }
 
   //**Features**//
   @Patch('/features')

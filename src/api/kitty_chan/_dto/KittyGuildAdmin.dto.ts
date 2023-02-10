@@ -1,8 +1,8 @@
 import { HttpException } from '@nestjs/common';
 import { Types } from 'mongoose';
-import { GUILD_ACTIONS } from 'src/api/guild/enum/guild_actions';
+import { GUILD_ACTIONS } from 'src/api/kitty_chan/enum/kitty_guild_actions';
 
-export class EditGuildAdminDto {
+export class EditKittyGuildAdminDto {
   constructor(
     public guildId: string,
     public ownerId: Types.ObjectId,

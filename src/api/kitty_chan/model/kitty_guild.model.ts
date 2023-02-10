@@ -1,13 +1,13 @@
 import { Schema } from 'mongoose';
 
-export const GuildSchema = new Schema({
+export const KittyGuildSchema = new Schema({
   name: String,
   guildId: String,
   ownerId: String,
   admins: [String],
 });
 
-export interface IGuild {
+export interface IKittyGuild {
   name: string;
   guildId: string;
   ownerId: string;

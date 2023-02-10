@@ -1,7 +1,7 @@
 import { HttpException, Inject, Injectable } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
 import { IAuth } from 'src/api/auth/model/auth.model';
-import { IGuild } from 'src/api/guild/model/guild.model';
+import { IKittyGuild } from 'src/api/kitty_chan/model/kitty_guild.model';
 import { KittychanService } from 'src/api/kitty_chan/service/kitty_chan.service';
 import { UserRepository } from 'src/api/users/repository/users.repository';
 import {
@@ -17,7 +17,7 @@ export class UserService {
     @Inject(KittychanService)
     private readonly kittychanService: KittychanService,
     @Inject(TYPES.AuthModel) private readonly Auth: Model<IAuth>,
-    @Inject(TYPES.GuildModel) private readonly Guild: Model<IGuild>,
+    @Inject(TYPES.GuildModel) private readonly Guild: Model<IKittyGuild>,
   ) {}
 
   ///Create LiveCord User

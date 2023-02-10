@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Model, Types } from 'mongoose';
-import { IGuild } from 'src/api/guild/model/guild.model';
+import { Model } from 'mongoose';
+import { IKittyGuild } from 'src/api/kitty_chan/model/kitty_guild.model';
 import { GUILD_USERS } from 'src/core/constants';
 import { TYPES } from 'src/core/types';
 
 @Injectable()
-export class GuildRepository {
+export class KittyGuildRepository {
   constructor(
-    @Inject(TYPES.GuildModel) private readonly Guild: Model<IGuild>,
+    @Inject(TYPES.GuildModel) private readonly Guild: Model<IKittyGuild>,
   ) {}
 
   ///Create

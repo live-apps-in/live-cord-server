@@ -1,9 +1,4 @@
-import {
-  MiddlewareConsumer,
-  Module,
-  NestModule,
-  RequestMethod,
-} from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AuthController } from 'src/api/auth/controllers/auth.controller';
 import { AuthGuard } from 'src/api/auth/guards/auth.guard';
 import { authProviders } from 'src/api/auth/model/auth.provider';

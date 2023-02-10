@@ -1,14 +1,13 @@
 import { Controller, Get, Inject, Request, Param, Patch } from '@nestjs/common';
-import { GUILD_ACTIONS } from 'src/api/guild/enum/guild_actions';
-import { GuildService } from 'src/api/guild/service/guild.service';
-import { EditGuildAdminDto } from 'src/api/guild/_dto/GuildAdmin.dto';
+import { GUILD_ACTIONS } from 'src/api/kitty_chan/enum/kitty_guild_actions';
+import { EditKittyGuildAdminDto } from 'src/api/kitty_chan/_dto/KittyGuildAdmin.dto';
 import { KittyGuildService } from 'src/api/kitty_chan/service/kitty_guild.service';
 import { Req } from 'src/core/custom_types';
 
-@Controller('guild')
-export class GuildController {
+@Controller('kitty_chan/guild')
+export class KittyGuildController {
   constructor(
-    @Inject(GuildService) private readonly guildService: GuildService,
+    @Inject(KittyGuildService) private readonly guildService: KittyGuildService,
     @Inject(KittyGuildService)
     private readonly guildConfigService: KittyGuildService,
   ) {}
@@ -35,7 +34,7 @@ export class GuildController {
     const { guildId, adminId, action } = params;
 
     ///Build and Validate Payload
-    const editGuildAdminPayload = new EditGuildAdminDto(
+    const editGuildAdminPayload = new EditKittyGuildAdminDto(
       guildId,
       userId,
       adminId,

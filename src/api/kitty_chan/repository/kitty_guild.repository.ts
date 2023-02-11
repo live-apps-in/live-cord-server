@@ -66,6 +66,9 @@ export class KittyGuildRepository {
       },
     ]);
 
+    if (guilds[0]) {
+      guilds[0].discord_id = discord_id;
+    }
     return guilds[0];
   }
 

@@ -3,7 +3,7 @@ import axios from 'axios';
 import * as jwt from 'jsonwebtoken';
 import APIConfig from '../config/api.config';
 
-interface AxiosConfig {
+export interface AxiosConfig {
   method: string;
   route: string;
   url: string;
@@ -27,18 +27,19 @@ export class AxiosService {
       ...body,
     };
 
-    const axiosConfig = {
+    const axiosConfig: any = {
       method,
       url: url + route,
-      data,
       headers,
     };
+
+    if (['POST', 'PUT', 'PATCH'].includes(method)) axiosConfig.data = data;
 
     let resData: any;
     await axios(axiosConfig)
       .then((res) => (resData = res.data))
       .catch((err) => {
-        console.log(err.message);
+        console.log(err);
         throw new HttpException('Bad Request - Internal API fail', 400);
         // console.log(err);
       });
@@ -65,6 +66,7 @@ export class AxiosService {
       'kitty_chan',
       payload.body.discord_username,
       payload.body.discord_id,
+      payload.body.guildId,
     );
     const getHeader = APIConfig.kitty_chan.header(getInternalToken);
 
@@ -83,12 +85,13 @@ export class AxiosService {
     scope: string,
     discord_username: string,
     discord_id: string | null,
+    guildId: string | null,
   ): any {
-    return new Promise((res, rej) => {
+    return new Promise((res) => {
       const accessToken = jwt.sign(
-        { scope, discord_username, discord_id },
+        { scope, discord_username, discord_id, guildId },
         process.env.INTERNAL_MS_SECRET,
-        { expiresIn: '60s' },
+        { expiresIn: '10s' },
       );
       res(accessToken);
     });

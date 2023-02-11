@@ -15,16 +15,30 @@ export default {
         method: 'POST',
       },
 
-      //**Guild**//
+      // //**
+      // GUILD
+      // All Guild based Operation
+      // **//
+      //Profile
       guild_profile: {
         route: '/live_cord/guild/profile',
         method: 'POST',
       },
+
+      //Feature
       edit_guild_feature: {
         route: '/live_cord/guild/features',
         method: 'PATCH',
       },
+
+      //Roles
+      view_guild_roles: {
+        route: '/live_cord/guild/roles',
+        method: 'GET',
+      },
     },
+
+    ///Jwt
     header: (jwt: string) => {
       return {
         'x-internal-token': jwt,

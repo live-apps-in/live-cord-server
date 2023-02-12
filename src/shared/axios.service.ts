@@ -11,6 +11,13 @@ export interface AxiosConfig {
   body?: any;
 }
 
+export interface InternalAuthPayload {
+  scope: string;
+  discord_username?: string;
+  discord_id?: string | null;
+  guildId?: string | null;
+}
+
 interface APIActionDTO {
   scope: string;
   action: string;
@@ -62,12 +69,12 @@ export class AxiosService {
       throw new HttpException('Invalid Scope or Action', 400);
 
     ///Fetch and build Headers(Auth)
-    const getInternalToken = await this.createAccessToken(
-      'kitty_chan',
-      payload.body.discord_username,
-      payload.body.discord_id,
-      payload.body.guildId,
-    );
+    const getInternalToken = await this.createAccessToken({
+      scope: 'kitty_chan',
+      discord_username: payload.body.discord_username,
+      discord_id: payload.body.discord_id,
+      guildId: payload.body.guildId,
+    });
     const getHeader = APIConfig.kitty_chan.header(getInternalToken);
 
     const axiosConfig: AxiosConfig = {
@@ -81,12 +88,9 @@ export class AxiosService {
     return axiosConfig;
   }
 
-  private createAccessToken(
-    scope: string,
-    discord_username: string,
-    discord_id: string | null,
-    guildId: string | null,
-  ): any {
+  public createAccessToken(payload: InternalAuthPayload): any {
+    const { scope, discord_username, discord_id, guildId } = payload;
+
     return new Promise((res) => {
       const accessToken = jwt.sign(
         { scope, discord_username, discord_id, guildId },

@@ -36,6 +36,12 @@ export default {
         route: '/live_cord/guild/roles',
         method: 'GET',
       },
+      reaction_roles_action: {
+        route: (action: string) => {
+          return `/live_cord/guild/reaction_roles/${action}`;
+        },
+        method: 'PATCH',
+      },
     },
 
     ///Jwt

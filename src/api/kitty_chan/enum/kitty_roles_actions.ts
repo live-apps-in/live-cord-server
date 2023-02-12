@@ -1,0 +1,4 @@
+export enum KITTY_REACTION_ROLES_ACTION {
+  SET = 'SET',
+  REMOVE = 'REMOVE',
+}

@@ -6,6 +6,14 @@ import {
   KittyRolesDto,
 } from 'src/api/kitty_chan/_dto/KittyRoles.dto';
 import { KittyReactionRolesRepo } from 'src/api/kitty_chan/repository/roles/kitty_reaction_roles.repo';
+import { Types } from 'mongoose';
+import {
+  AxiosConfig,
+  AxiosService,
+  InternalAuthPayload,
+} from 'src/shared/axios.service';
+import { BOTS } from 'src/core/constants';
+import apiConfig from 'src/config/api.config';
 
 @Injectable()
 export class KittyRolesService {
@@ -14,6 +22,8 @@ export class KittyRolesService {
     private readonly kittyDiscordService: DiscordAPIService,
     @Inject(KittyReactionRolesRepo)
     private readonly kittyReactionRolesRepo: KittyReactionRolesRepo,
+    @Inject(AxiosService)
+    private readonly axiosService: AxiosService,
   ) {}
 
   ///Roles
@@ -47,5 +57,32 @@ export class KittyRolesService {
       guildId,
     );
     return reaction_roles;
+  }
+
+  ///Reaction Roles Action
+  async reactionRolesAction(
+    reaction_role_id: Types.ObjectId,
+    guildId: string,
+    action: string,
+  ) {
+    //Call kitty chan API
+    const { baseURL, actions, header } = apiConfig.kitty_chan;
+    const axiosConfig = {
+      url: baseURL,
+      method: actions.reaction_roles_action.method,
+      route: actions.reaction_roles_action.route(action),
+      body: { reaction_role_id },
+      headers: header(
+        await this.axiosService.createAccessToken({
+          scope: BOTS.kitty_chan,
+          guildId,
+        } as InternalAuthPayload),
+      ),
+    } as AxiosConfig;
+
+    const reactionRoleAction = await this.axiosService.axiosInstance(
+      axiosConfig,
+    );
+    return reactionRoleAction;
   }
 }

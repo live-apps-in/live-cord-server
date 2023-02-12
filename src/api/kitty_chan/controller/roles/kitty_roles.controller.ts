@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
 import { Patch } from '@nestjs/common/decorators';
+import { Types } from 'mongoose';
 import { KittyRolesService } from 'src/api/kitty_chan/service/roles/kitty_role.service';
 
 /**
@@ -33,9 +34,17 @@ export class KittyRolesController {
   }
 
   ///Reaction Role Actions
-  @Patch('/:guildId/reaction_roles/:reaction_roles_id/:action')
+  @Patch('/:guildId/reaction_roles/:reaction_role_id/:action')
   async reaction_role_actions(
-    @Param('reaction_roles_id') reaction_roles_id: string,
+    @Param('guildId') guildId: string,
+    @Param('reaction_roles_id') reaction_role_id: any,
     @Param('action') action: string,
-  ) {}
+  ) {
+    reaction_role_id = new Types.ObjectId(reaction_role_id);
+    return await this.kittyRolesService.reactionRolesAction(
+      reaction_role_id,
+      guildId,
+      action,
+    );
+  }
 }

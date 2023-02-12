@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions';
-import { KittyDiscordService } from 'src/api/kitty_chan/service/discord/KittyDiscord.service';
+import { DiscordAPIService } from 'src/shared/discord_api.service';
 import { KittyRolesDto } from 'src/api/kitty_chan/_dto/KittyRoles.dto';
 
 @Injectable()
 export class KittyRolesService {
   constructor(
-    @Inject(KittyDiscordService)
-    private readonly kittyDiscordService: KittyDiscordService,
+    @Inject(DiscordAPIService)
+    private readonly kittyDiscordService: DiscordAPIService,
   ) {}
 
   async getAllRoles(guildId: string) {

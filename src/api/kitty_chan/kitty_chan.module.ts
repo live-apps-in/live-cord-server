@@ -5,7 +5,7 @@ import { KittyRolesController } from 'src/api/kitty_chan/controller/roles/kitty_
 import { GuildAccess } from 'src/api/kitty_chan/middlewares/permission.middleware';
 import { guildProvider } from 'src/api/kitty_chan/model/kitty_guild.provider';
 import { KittyGuildRepository } from 'src/api/kitty_chan/repository/kitty_guild.repository';
-import { KittyDiscordService } from 'src/api/kitty_chan/service/discord/KittyDiscord.service';
+import { DiscordAPIService } from 'src/shared/discord_api.service';
 import { KittychanService } from 'src/api/kitty_chan/service/kitty_chan.service';
 import { KittyGuildService } from 'src/api/kitty_chan/service/kitty_guild.service';
 import { KittyRolesService } from 'src/api/kitty_chan/service/roles/kitty_role.service';
@@ -21,7 +21,7 @@ import { AxiosService } from 'src/shared/axios.service';
   providers: [
     KittychanService,
     KittyRolesService,
-    KittyDiscordService,
+    DiscordAPIService,
     KittyGuildService,
     KittyGuildRepository,
     UserRepository,
@@ -38,6 +38,6 @@ export class KittychanModule implements NestModule {
 
     ///Roles Controller
     consumer.apply(AuthGuard).forRoutes(KittyRolesController);
-    consumer.apply(GuildAccess).forRoutes(KittyRolesController);
+    consumer.apply(GuildAccess).forRoutes(KittyRolesController); //Validate and retrieve Guild Access Permission
   }
 }

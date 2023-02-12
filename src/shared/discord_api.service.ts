@@ -8,7 +8,7 @@ import { AxiosConfig, AxiosService } from 'src/shared/axios.service';
 //** */
 
 @Injectable()
-export class KittyDiscordService {
+export class DiscordAPIService {
   constructor(
     @Inject(AxiosService) private readonly axiosService: AxiosService,
   ) {}

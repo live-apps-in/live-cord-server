@@ -2,7 +2,11 @@
   "name": "live-cord-server",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": {
+    "name": "Jaga",
+    "email": "jagadheesh6@gmail.com",
+    "url": "https://jagalive.in"
+  },
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

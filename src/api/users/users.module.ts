@@ -2,7 +2,7 @@ import { MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common';
 import { Module } from '@nestjs/common/decorators';
 import { AuthGuard, InternalAuthGuard } from 'src/api/auth/guards/auth.guard';
 import { authProviders } from 'src/api/auth/model/auth.provider';
-import { guildProvider } from 'src/api/kitty_chan/model/kitty_guild.provider';
+import { guildProvider } from 'src/api/kitty_chan/model/providers/kitty_guild.provider';
 import { KittychanService } from 'src/api/kitty_chan/service/kitty_chan.service';
 import { UserController } from 'src/api/users/controller/users.controller';
 import { usersProvider } from 'src/api/users/model/users.provider';

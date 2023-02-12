@@ -3,7 +3,7 @@ import { AuthGuard } from 'src/api/auth/guards/auth.guard';
 import { KittyGuildController } from 'src/api/kitty_chan/controller/kitty_guild.controller';
 import { KittyRolesController } from 'src/api/kitty_chan/controller/roles/kitty_roles.controller';
 import { GuildAccess } from 'src/api/kitty_chan/middlewares/permission.middleware';
-import { guildProvider } from 'src/api/kitty_chan/model/kitty_guild.provider';
+import { guildProvider } from 'src/api/kitty_chan/model/providers/kitty_guild.provider';
 import { KittyGuildRepository } from 'src/api/kitty_chan/repository/kitty_guild.repository';
 import { DiscordAPIService } from 'src/shared/discord_api.service';
 import { KittychanService } from 'src/api/kitty_chan/service/kitty_chan.service';
@@ -14,6 +14,8 @@ import { UserRepository } from 'src/api/users/repository/users.repository';
 import { UserModule } from 'src/api/users/users.module';
 import { DatabaseModule } from 'src/database/database.module';
 import { AxiosService } from 'src/shared/axios.service';
+import { kittyReactionRolesProvider } from 'src/api/kitty_chan/model/providers/kitty_reaction_roles.provider';
+import { KittyReactionRolesRepo } from 'src/api/kitty_chan/repository/roles/kitty_reaction_roles.repo';
 
 @Module({
   imports: [UserModule, DatabaseModule],
@@ -24,10 +26,12 @@ import { AxiosService } from 'src/shared/axios.service';
     DiscordAPIService,
     KittyGuildService,
     KittyGuildRepository,
+    KittyReactionRolesRepo,
     UserRepository,
     AxiosService,
     ...guildProvider,
     ...usersProvider,
+    ...kittyReactionRolesProvider,
   ],
   exports: [KittychanService],
 })

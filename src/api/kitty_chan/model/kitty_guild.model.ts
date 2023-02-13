@@ -5,6 +5,10 @@ export const KittyGuildSchema = new Schema({
   guildId: String,
   ownerId: String,
   admins: [String],
+  config: {
+    type: Object,
+    default: {},
+  },
 });
 
 export interface IKittyGuild {
@@ -12,4 +16,5 @@ export interface IKittyGuild {
   guildId: string;
   ownerId: string;
   admins: string[];
+  config: any;
 }

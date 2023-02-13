@@ -22,7 +22,19 @@ export class KittyRolesController {
 
   /**
    * Reaction Roles
+   * @param {string} channelId - Discord channelId
    */
+  ///Set Reaction Role Channel
+  @Patch('/:guildId/reaction_roles/channel/:channelId')
+  async setReactionRoleChannel(
+    @Param('channelId') channelId: string,
+    @Param('guildId') guildId: string,
+  ) {
+    return await this.kittyRolesService.setReactionRoleChannel(
+      channelId,
+      guildId,
+    );
+  }
   @Post('/:guildId/reaction_roles')
   async createReactionRoles(@Body() reqBody: any) {
     return await this.kittyRolesService.createReactionRoles(reqBody);

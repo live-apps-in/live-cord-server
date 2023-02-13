@@ -14,6 +14,7 @@ import {
 } from 'src/shared/axios.service';
 import { BOTS } from 'src/core/constants';
 import apiConfig from 'src/config/api.config';
+import { KittyGuildRepository } from 'src/api/kitty_chan/repository/kitty_guild.repository';
 
 @Injectable()
 export class KittyRolesService {
@@ -22,6 +23,8 @@ export class KittyRolesService {
     private readonly kittyDiscordService: DiscordAPIService,
     @Inject(KittyReactionRolesRepo)
     private readonly kittyReactionRolesRepo: KittyReactionRolesRepo,
+    @Inject(KittyGuildRepository)
+    private readonly kittyGuildRepository: KittyGuildRepository,
     @Inject(AxiosService)
     private readonly axiosService: AxiosService,
   ) {}
@@ -42,6 +45,17 @@ export class KittyRolesService {
   /**
    * Reaction Roles
    */
+  ///Set Reaction Role Channel
+  async setReactionRoleChannel(channelId: string, guildId: string) {
+    await this.kittyGuildRepository.update(guildId, {
+      $set: { 'config.reaction_roles_channel': channelId },
+    });
+
+    return {
+      message: 'Reaction Role Channel Updated',
+    };
+  }
+
   async createReactionRoles(payload: CreateKittyReactionRolesDto) {
     const reaction_roles = await this.kittyReactionRolesRepo.getByName(
       payload.name,

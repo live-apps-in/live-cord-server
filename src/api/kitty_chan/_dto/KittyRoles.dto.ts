@@ -20,3 +20,12 @@ export class CreateKittyReactionRolesDto {
     public guildId: string,
   ) {}
 }
+
+export class KittyReactionRolesActionDto {
+  constructor(
+    public channelId: string,
+    public action: string,
+    public reaction_role_message_ref?: string,
+    public rolesMapping?: any[],
+  ) {}
+}

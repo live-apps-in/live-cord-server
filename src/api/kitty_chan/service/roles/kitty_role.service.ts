@@ -3,6 +3,7 @@ import { HttpException } from '@nestjs/common/exceptions';
 import { DiscordAPIService } from 'src/shared/discord_api.service';
 import {
   CreateKittyReactionRolesDto,
+  KittyReactionRolesActionDto,
   KittyRolesDto,
 } from 'src/api/kitty_chan/_dto/KittyRoles.dto';
 import { KittyReactionRolesRepo } from 'src/api/kitty_chan/repository/roles/kitty_reaction_roles.repo';
@@ -74,18 +75,32 @@ export class KittyRolesService {
   }
 
   ///Reaction Roles Action
-  async reactionRolesAction(
-    reaction_role_id: Types.ObjectId,
-    guildId: string,
-    action: string,
-  ) {
+  async reactionRolesAction(reaction_role_id: Types.ObjectId, action: string) {
+    const reaction_role = await this.kittyReactionRolesRepo.getById(
+      reaction_role_id,
+    );
+    if (!reaction_role) throw new HttpException('Reaction Role not found', 400);
+
+    const { guildId, reaction_role_message_ref, rolesMapping } = reaction_role;
+
+    const guild = await this.kittyGuildRepository.getByGuildId(guildId);
+    if (!guild?.config?.reaction_roles_channel)
+      throw new HttpException('Reaction Role channel not set', 400);
+
+    const reactionRoleActionDto = {
+      channelId: guild.config.reaction_roles_channel,
+      action,
+      reaction_role_message_ref,
+      rolesMapping,
+    } as KittyReactionRolesActionDto;
+
     //Call kitty chan API
     const { baseURL, actions, header } = apiConfig.kitty_chan;
     const axiosConfig = {
       url: baseURL,
       method: actions.reaction_roles_action.method,
       route: actions.reaction_roles_action.route(action),
-      body: { reaction_role_id },
+      body: { ...reactionRoleActionDto },
       headers: header(
         await this.axiosService.createAccessToken({
           scope: BOTS.kitty_chan,

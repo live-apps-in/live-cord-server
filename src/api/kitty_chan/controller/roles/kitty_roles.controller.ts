@@ -49,13 +49,12 @@ export class KittyRolesController {
   @Patch('/:guildId/reaction_roles/:reaction_role_id/:action')
   async reaction_role_actions(
     @Param('guildId') guildId: string,
-    @Param('reaction_roles_id') reaction_role_id: any,
+    @Param('reaction_role_id') reaction_role_id: any,
     @Param('action') action: string,
   ) {
     reaction_role_id = new Types.ObjectId(reaction_role_id);
     return await this.kittyRolesService.reactionRolesAction(
       reaction_role_id,
-      guildId,
       action,
     );
   }

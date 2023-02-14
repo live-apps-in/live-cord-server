@@ -31,4 +31,8 @@ export class KittyReactionRolesRepo {
     const reactionRoles = await this.kittyReactionRoles.find({ guildId });
     return reactionRoles;
   }
+
+  async updateById(_id: Types.ObjectId, payload: any) {
+    return await this.kittyReactionRoles.updateOne({ _id }, { ...payload });
+  }
 }

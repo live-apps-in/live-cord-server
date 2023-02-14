@@ -16,7 +16,7 @@ export class KittyRolesDto {
 export class CreateKittyReactionRolesDto {
   constructor(
     public name: string,
-    public rolesMapping: any[],
+    public discordEmbedConfig: any[],
     public guildId: string,
   ) {}
 }
@@ -26,6 +26,6 @@ export class KittyReactionRolesActionDto {
     public channelId: string,
     public action: string,
     public reaction_role_message_ref?: string,
-    public rolesMapping?: any[],
+    public discordEmbedConfig?: any[],
   ) {}
 }

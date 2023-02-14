@@ -2,7 +2,7 @@ import { Schema } from 'mongoose';
 
 export const KittyReactionRolesSchema = new Schema({
   name: String,
-  rolesMapping: Array<any>,
+  discordEmbedConfig: Object,
   guildId: String,
   reaction_role_message_ref: String,
   isActive: {
@@ -13,7 +13,7 @@ export const KittyReactionRolesSchema = new Schema({
 
 export interface IKittyReactionRoles {
   name: string;
-  rolesMapping: any[];
+  discordEmbedConfig: any;
   guildId: string;
   reaction_role_message_ref: string;
   isActive: boolean;

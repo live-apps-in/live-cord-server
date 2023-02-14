@@ -81,7 +81,8 @@ export class KittyRolesService {
     );
     if (!reaction_role) throw new HttpException('Reaction Role not found', 400);
 
-    const { guildId, reaction_role_message_ref, rolesMapping } = reaction_role;
+    const { guildId, reaction_role_message_ref, discordEmbedConfig } =
+      reaction_role;
 
     const guild = await this.kittyGuildRepository.getByGuildId(guildId);
     if (!guild?.config?.reaction_roles_channel)
@@ -91,7 +92,7 @@ export class KittyRolesService {
       channelId: guild.config.reaction_roles_channel,
       action,
       reaction_role_message_ref,
-      rolesMapping,
+      discordEmbedConfig,
     } as KittyReactionRolesActionDto;
 
     //Call kitty chan API
@@ -112,6 +113,19 @@ export class KittyRolesService {
     const reactionRoleAction = await this.axiosService.axiosInstance(
       axiosConfig,
     );
-    return reactionRoleAction;
+
+    if (!reactionRoleAction?.reaction_role_message_ref)
+      throw new HttpException('Unable to set Reaction Role', 400);
+
+    await this.kittyReactionRolesRepo.updateById(reaction_role_id, {
+      $set: {
+        isActive: true,
+        reaction_role_message_ref: reactionRoleAction.reaction_role_message_ref,
+      },
+    });
+
+    return {
+      message: 'Reaction role is now set',
+    };
   }
 }

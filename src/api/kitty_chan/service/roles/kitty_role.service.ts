@@ -57,6 +57,7 @@ export class KittyRolesService {
     };
   }
 
+  ///Create Reaction Role mapping in LiveCord
   async createReactionRoles(payload: CreateKittyReactionRolesDto) {
     const reaction_roles = await this.kittyReactionRolesRepo.getByName(
       payload.name,
@@ -67,6 +68,7 @@ export class KittyRolesService {
     return await this.kittyReactionRolesRepo.create(payload);
   }
 
+  ///Get all Reaction Roles from LiveCord
   async getReactionRoles(guildId: string) {
     const reaction_roles = await this.kittyReactionRolesRepo.getByGuildId(
       guildId,
@@ -74,23 +76,30 @@ export class KittyRolesService {
     return reaction_roles;
   }
 
-  ///Reaction Roles Action
+  ///Reaction Roles Action (SET, UPDATE, DELETE)
   async reactionRolesAction(reaction_role_id: Types.ObjectId, action: string) {
     const reaction_role = await this.kittyReactionRolesRepo.getById(
       reaction_role_id,
     );
     if (!reaction_role) throw new HttpException('Reaction Role not found', 400);
 
-    const { guildId, reaction_role_message_ref, discordEmbedConfig } =
-      reaction_role;
+    const {
+      name,
+      guildId,
+      rolesMapping,
+      reaction_role_message_ref,
+      discordEmbedConfig,
+    } = reaction_role;
 
     const guild = await this.kittyGuildRepository.getByGuildId(guildId);
     if (!guild?.config?.reaction_roles_channel)
       throw new HttpException('Reaction Role channel not set', 400);
 
     const reactionRoleActionDto = {
+      name,
       channelId: guild.config.reaction_roles_channel,
       action,
+      rolesMapping,
       reaction_role_message_ref,
       discordEmbedConfig,
     } as KittyReactionRolesActionDto;

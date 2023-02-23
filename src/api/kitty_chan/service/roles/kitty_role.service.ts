@@ -133,8 +133,6 @@ export class KittyRolesService {
       },
     });
 
-    return {
-      message: 'Reaction role is now set',
-    };
+    return reactionRoleAction;
   }
 }

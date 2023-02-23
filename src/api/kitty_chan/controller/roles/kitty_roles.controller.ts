@@ -14,17 +14,18 @@ export class KittyRolesController {
     private readonly kittyRolesService: KittyRolesService,
   ) {}
 
-  ///Roles
+  /**
+   * Fetch Roles from Discord API
+   */
   @Get('/:guildId/roles')
   async getRoles(@Param('guildId') guildId: string) {
     return await this.kittyRolesService.getAllRoles(guildId);
   }
 
   /**
-   * Reaction Roles
+   * Set Reaction Roles Channel
    * @param {string} channelId - Discord channelId
    */
-  ///Set Reaction Role Channel
   @Patch('/:guildId/reaction_roles/channel/:channelId')
   async setReactionRoleChannel(
     @Param('channelId') channelId: string,
@@ -35,17 +36,29 @@ export class KittyRolesController {
       guildId,
     );
   }
+
+  /**
+   * Create Reaction Roles in LiveCord
+   */
   @Post('/:guildId/reaction_roles')
   async createReactionRoles(@Body() reqBody: any) {
     return await this.kittyRolesService.createReactionRoles(reqBody);
   }
 
+  /**
+   * Get Reaction Roles from LiveCord
+   */
   @Get('/:guildId/reaction_roles')
   async getReactionRoles(@Param('guildId') guildId: string) {
     return await this.kittyRolesService.getReactionRoles(guildId);
   }
 
-  ///Reaction Role Actions
+  /**
+   * Call kitty chan service for Reaction Roles Action
+   * @param { string } guildId
+   * @param { Types.ObjectId } reaction_role_id
+   * @param { string } action
+   */
   @Patch('/:guildId/reaction_roles/:reaction_role_id/:action')
   async reaction_role_actions(
     @Param('guildId') guildId: string,

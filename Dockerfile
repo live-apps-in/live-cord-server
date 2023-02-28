@@ -4,5 +4,5 @@ COPY package.json .
 RUN npm install -g typescript
 RUN npm install
 COPY . .
-RUN tsc
+RUN npm run build
 CMD ["node","./dist/main.js"]

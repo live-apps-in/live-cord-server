@@ -5,7 +5,8 @@ export class AppService {
   getHello(): any {
     return {
       name: 'LiveCord API',
-      refPort: 5002,
+      localPort: 5002,
+      prodPort: 5007
     };
   }
 }

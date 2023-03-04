@@ -15,7 +15,7 @@ pipeline {
         }
         stage('Start New Container') {
             steps {
-                sh 'docker run -p 5007:5000 -d --restart always --name live-cord-server live-cord-server'
+                sh 'docker run -p 5007:5000 -p 5020:5020 -d --restart always --name live-cord-server live-cord-server'
             }
         }
     }

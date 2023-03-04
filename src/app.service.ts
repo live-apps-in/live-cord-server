@@ -6,7 +6,7 @@ export class AppService {
     return {
       name: 'LiveCord API',
       localPort: 5002,
-      prodPort: 5007
+      prodPort: 5007,
     };
   }
 }

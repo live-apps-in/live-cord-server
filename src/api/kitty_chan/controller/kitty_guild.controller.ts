@@ -11,12 +11,8 @@ import { GUILD_ACTIONS } from 'src/api/kitty_chan/enum/kitty_guild_actions';
 import { EditKittyGuildAdminDto } from 'src/api/kitty_chan/_dto/KittyGuildAdmin.dto';
 import { KittyGuildService } from 'src/api/kitty_chan/service/kitty_guild.service';
 import { Req } from 'src/core/custom_types';
-import {
-  Client,
-  ClientGrpc,
-  GrpcMethod,
-} from '@nestjs/microservices';
-import { grpcClientOptions } from 'src/microservice/grpc_client_options';
+import { Client, ClientGrpc, GrpcMethod } from '@nestjs/microservices';
+import { microserviceOptions } from 'src/microservice/grpc_client_options';
 import {
   HelloRequest,
   HelloResponse,
@@ -24,7 +20,7 @@ import {
 } from 'proto/interface/live_cord.interface';
 @Controller('kitty_chan/guild')
 export class KittyGuildController implements OnModuleInit {
-  @Client(grpcClientOptions)
+  @Client(microserviceOptions)
   ///gRPC Config
   private client: ClientGrpc;
   private grpcService: HelloWorld;
@@ -36,7 +32,7 @@ export class KittyGuildController implements OnModuleInit {
   ) {}
 
   onModuleInit() {
-    this.grpcService = this.client.getService<HelloWorld>('HelloWorld');
+    // this.grpcService = this.client.getService<HelloWorld>('HelloWorld');
   }
 
   ///View Guild of a User

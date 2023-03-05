@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package kitty_chan;
+
+service ReactionRoleService {
+  rpc reactionRolesAction (ReactionRoleActionReqDto) returns (ReactionRoleActionResDto);
+}
+
+message ReactionRoleActionReqDto {
+  string name = 1;
+  string action = 2;
+  string channelId = 3;
+  string reaction_role_message_ref = 4;
+  string discordEmbedConfig = 5;
+}
+
+message ReactionRoleActionResDto {
+  string messageRef = 1;
+}

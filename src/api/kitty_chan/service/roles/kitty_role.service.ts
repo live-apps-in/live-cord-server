@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions';
 import { DiscordAPIService } from 'src/shared/discord_api.service';
 import {
@@ -16,9 +16,16 @@ import {
 import { BOTS } from 'src/core/constants';
 import apiConfig from 'src/config/api.config';
 import { KittyGuildRepository } from 'src/api/kitty_chan/repository/kitty_guild.repository';
+import { Client, ClientGrpc } from '@nestjs/microservices';
+import { microserviceOptions } from 'src/microservice/grpc_client_options';
+import { ReactionRoleService } from 'proto/interface/kitty_chan.interface';
 
 @Injectable()
-export class KittyRolesService {
+export class KittyRolesService implements OnModuleInit {
+  @Client(microserviceOptions)
+  private client: ClientGrpc;
+  private grpcRolesService: ReactionRoleService;
+
   constructor(
     @Inject(DiscordAPIService)
     private readonly kittyDiscordService: DiscordAPIService,
@@ -29,6 +36,12 @@ export class KittyRolesService {
     @Inject(AxiosService)
     private readonly axiosService: AxiosService,
   ) {}
+
+  onModuleInit() {
+    this.grpcRolesService = this.client.getService<ReactionRoleService>(
+      'ReactionRoleService',
+    );
+  }
 
   ///Roles
   async getAllRoles(guildId: string) {
@@ -82,7 +95,6 @@ export class KittyRolesService {
       reaction_role_id,
     );
     if (!reaction_role) throw new HttpException('Reaction Role not found', 400);
-
     const {
       name,
       guildId,
@@ -95,44 +107,29 @@ export class KittyRolesService {
     if (!guild?.config?.reaction_roles_channel)
       throw new HttpException('Reaction Role channel not set', 400);
 
-    const reactionRoleActionDto = {
-      name,
-      channelId: guild.config.reaction_roles_channel,
-      action,
-      rolesMapping,
-      reaction_role_message_ref,
-      discordEmbedConfig,
-    } as KittyReactionRolesActionDto;
+    const reactionRoleAction: any =
+      await this.grpcRolesService.reactionRolesAction({
+        name,
+        action,
+        channelId: guild.config.reaction_roles_channel,
+        discordEmbedConfig: 'config',
+        reaction_role_message_ref: 'ahello world',
+      });
 
-    //Call kitty chan API
-    const { baseURL, actions, header } = apiConfig.kitty_chan;
-    const axiosConfig = {
-      url: baseURL,
-      method: actions.reaction_roles_action.method,
-      route: actions.reaction_roles_action.route(action),
-      body: { ...reactionRoleActionDto },
-      headers: header(
-        await this.axiosService.createAccessToken({
-          scope: BOTS.kitty_chan,
-          guildId,
-        } as InternalAuthPayload),
-      ),
-    } as AxiosConfig;
+    const res = await reactionRoleAction.toPromise();
 
-    const reactionRoleAction = await this.axiosService.axiosInstance(
-      axiosConfig,
-    );
+    console.log(res);
 
-    if (!reactionRoleAction?.reaction_role_message_ref)
+    if (!res?.reaction_role_message_ref)
       throw new HttpException('Unable to set Reaction Role', 400);
 
     await this.kittyReactionRolesRepo.updateById(reaction_role_id, {
       $set: {
         isActive: true,
-        reaction_role_message_ref: reactionRoleAction.reaction_role_message_ref,
+        reaction_role_message_ref: res.reaction_role_message_ref,
       },
     });
 
-    return reactionRoleAction;
+    return res;
   }
 }

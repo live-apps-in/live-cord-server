@@ -19,6 +19,7 @@ import { KittyGuildRepository } from 'src/api/kitty_chan/repository/kitty_guild.
 import { Client, ClientGrpc } from '@nestjs/microservices';
 import { microserviceOptions } from 'src/microservice/grpc_client_options';
 import { ReactionRoleService } from 'proto/interface/kitty_chan.interface';
+import * as grpc from '@grpc/grpc-js';
 
 @Injectable()
 export class KittyRolesService implements OnModuleInit {
@@ -95,29 +96,28 @@ export class KittyRolesService implements OnModuleInit {
       reaction_role_id,
     );
     if (!reaction_role) throw new HttpException('Reaction Role not found', 400);
-    const {
-      name,
-      guildId,
-      rolesMapping,
-      reaction_role_message_ref,
-      discordEmbedConfig,
-    } = reaction_role;
 
-    const guild = await this.kittyGuildRepository.getByGuildId(guildId);
-    if (!guild?.config?.reaction_roles_channel)
+    const { config } = await this.kittyGuildRepository.getByGuildId(
+      reaction_role.guildId,
+    );
+    if (!config?.reaction_roles_channel)
       throw new HttpException('Reaction Role channel not set', 400);
 
+    const getAuth: any = new grpc.Metadata().add('authorization', 'hello');
+
     const reactionRoleAction: any =
-      await this.grpcRolesService.reactionRolesAction({
-        name,
-        action,
-        channelId: guild.config.reaction_roles_channel,
-        discordEmbedConfig: 'config',
-        reaction_role_message_ref: 'ahello world',
-      });
+      await this.grpcRolesService.reactionRolesAction(
+        {
+          name: reaction_role.name,
+          action,
+          channelId: config.reaction_roles_channel,
+          discordEmbedConfig: reaction_role.discordEmbedConfig,
+          reactionRoleMessageRef: reaction_role.reactionRoleMessageRef,
+        },
+        getAuth,
+      );
 
     const res = await reactionRoleAction.toPromise();
-
     console.log(res);
 
     if (!res?.reaction_role_message_ref)

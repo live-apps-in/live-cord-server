@@ -1,3 +1,4 @@
+import * as grpc from '@grpc/grpc-js';
 import { ClientOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 
@@ -8,5 +9,6 @@ export const microserviceOptions: ClientOptions = {
     package: 'kitty_chan',
     protoPath: join(__dirname, '../../proto/kitty_chan.proto'),
     url: '127.0.0.1:5030',
+    credentials: grpc.credentials.createSsl(),
   },
 };

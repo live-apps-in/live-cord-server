@@ -1,16 +1,16 @@
-
+import * as grpc from '@grpc/grpc-js'
 export interface ReactionRoleService{
-    reactionRolesAction(payload: ReactionRoleActionReqDto): Promise<ReactionRoleActionResDto>
+    reactionRolesAction(payload: ReactionRoleActionReqDto, metadata: grpc.Metadata): Promise<ReactionRoleActionResDto>
 }
 
 interface ReactionRoleActionReqDto {
   name: string
   channelId: string
   action: string
-  reaction_role_message_ref: string
+  reactionRoleMessageRef: string
   discordEmbedConfig: string
 }
 
 interface ReactionRoleActionResDto {
-  messageRef: string
+  reactionRoleMessageRef: string
 }

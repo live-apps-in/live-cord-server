@@ -17,7 +17,8 @@ import {
   HelloRequest,
   HelloResponse,
   HelloWorld,
-} from 'proto/interface/live_cord.interface';
+} from 'src/proto/interface/live_cord.interface';
+
 @Controller('kitty_chan/guild')
 export class KittyGuildController implements OnModuleInit {
   @Client(microserviceOptions)

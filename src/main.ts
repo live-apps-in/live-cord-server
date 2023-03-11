@@ -22,7 +22,7 @@ async function bootstrap() {
       transport: Transport.GRPC,
       options: {
         package: 'live_cord',
-        protoPath: join(__dirname, '../proto/live_cord.proto'),
+        protoPath: join(__dirname, './proto/live_cord.proto'),
         url: process.env.GRPC_URL,
       },
     };

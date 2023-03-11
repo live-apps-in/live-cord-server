@@ -7,7 +7,7 @@ export const microserviceOptions: ClientOptions = {
   transport: Transport.GRPC,
   options: {
     package: 'kitty_chan',
-    protoPath: join(__dirname, '../../proto/kitty_chan.proto'),
+    protoPath: join(__dirname, '../proto/kitty_chan.proto'),
     url: '127.0.0.1:5030',
     credentials: grpc.credentials.createSsl(),
   },

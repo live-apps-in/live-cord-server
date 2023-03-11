@@ -5,6 +5,5 @@ RUN npm install -g typescript cpx
 RUN npm install
 COPY . .
 RUN npm run build
-RUN npm run copy:assets
-CMD ["node", "./dist/src/main.js"]
+CMD ["node", "./dist/main.js"]
 EXPOSE 5000

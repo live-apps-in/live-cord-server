@@ -11,7 +11,7 @@ import { AxiosService } from 'src/shared/axios.service';
 import { KittyGuildRepository } from 'src/api/kitty_chan/repository/kitty_guild.repository';
 import { Client, ClientGrpc } from '@nestjs/microservices';
 import { microserviceOptions } from 'src/microservice/grpc_client_options';
-import { ReactionRoleService } from 'proto/interface/kitty_chan.interface';
+import { ReactionRoleService } from 'src/proto/interface/kitty_chan.interface';
 import * as grpc from '@grpc/grpc-js';
 
 @Injectable()

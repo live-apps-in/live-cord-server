@@ -13,7 +13,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "concurrently \"nest start --watch\" \"npm run copy:assets\"",
+    "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
     "build:proto": "npx proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=./proto/ ./proto/kitty_chan.proto -y",

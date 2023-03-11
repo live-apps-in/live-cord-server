@@ -16,6 +16,7 @@ export class AuthService {
   private JWT_SECRET = process.env.JWT_SECRET;
   private DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
   private DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
+  private DISCORD_REDIRECT_URL = process.env.DISCORD_REDIRECT_URL;
 
   private oauth = new DiscordOAuth2({
     clientId: this.DISCORD_CLIENT_ID,
@@ -38,7 +39,7 @@ export class AuthService {
         code,
         scope: ['identify'],
         grantType: 'authorization_code',
-        redirectUri: 'http://localhost:5002/auth/discord',
+        redirectUri: this.DISCORD_REDIRECT_URL,
       })
       .catch(() => {
         throw new HttpException('Invalid Auth Code', 400);

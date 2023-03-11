@@ -55,6 +55,10 @@ export class AuthService {
     await this.userRepo.update(userId, {
       discord: user,
     });
+
+    return {
+      message: 'ok',
+    };
   }
 
   ////Send OTP via Discord Bot (kitty chan - Profile Validation)

@@ -18,10 +18,8 @@ export class UserController {
 
   @Get('/profile')
   async profile(@Request() req: any) {
-    console.log(req.userData);
-    const fetchData = await this.kitty_chanService.profile('Jaga#3176');
-    console.log(fetchData);
-    // return this.userService.profile(req.userData.userId);
-    return fetchData;
+    return this.userService.profile(req.userData.userId);
+    // const fetchData = await this.kitty_chanService.profile('Jaga#3176');
+    // return fetchData;
   }
 }

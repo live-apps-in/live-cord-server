@@ -8,16 +8,53 @@ import { UserRepository } from 'src/api/users/repository/users.repository';
 import { TYPES } from 'src/core/types';
 import { random_numbers } from 'src/utils/numbers/number';
 import * as jwt from 'jsonwebtoken';
+import * as DiscordOAuth2 from 'discord-oauth2';
 import 'dotenv/config';
+import { DiscordAPIService } from 'src/shared/discord_api.service';
 @Injectable()
 export class AuthService {
   private JWT_SECRET = process.env.JWT_SECRET;
+  private DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
+  private DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
+
+  private oauth = new DiscordOAuth2({
+    clientId: this.DISCORD_CLIENT_ID,
+    clientSecret: this.DISCORD_CLIENT_SECRET,
+  });
+
   constructor(
     @Inject(UserRepository) private readonly userRepo: UserRepository,
+    @Inject(DiscordAPIService)
+    private readonly discordAPIService: DiscordAPIService,
     @Inject(KittychanService)
     private readonly kittychanService: KittychanService,
     @Inject(TYPES.AuthModel) private readonly Auth: Model<IAuth>,
   ) {}
+
+  ///Connect to Discord
+  async connectToDiscord(code: string, userId) {
+    const token = await this.oauth
+      .tokenRequest({
+        code,
+        scope: ['identify'],
+        grantType: 'authorization_code',
+        redirectUri: 'http://localhost:5002/auth/discord',
+      })
+      .catch(() => {
+        throw new HttpException('Invalid Auth Code', 400);
+      });
+
+    if (!token) throw new HttpException('Invalid Auth Code', 400);
+
+    const user = await this.discordAPIService.fetchUserProfile(
+      token.access_token,
+    );
+    if (!user) throw new HttpException('Cannot connect to discord', 400);
+
+    await this.userRepo.update(userId, {
+      discord: user,
+    });
+  }
 
   ////Send OTP via Discord Bot (kitty chan - Profile Validation)
   async send_otp_discord(_id: Types.ObjectId) {

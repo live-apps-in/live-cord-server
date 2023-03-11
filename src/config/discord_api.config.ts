@@ -3,13 +3,19 @@ import { BOTS } from 'src/core/constants';
 export const DISCORD_API_CONFIG = {
   baseURL: 'https://discord.com/api/v9',
 
-  ///Fetch Guild
   actions: {
+    ///Fetch Guild
     getGuild: {
       method: 'GET',
       route: (guildId) => {
         return `/guilds/${guildId}`;
       },
+    },
+
+    ///User Profile @me
+    fetchUserProfile: {
+      method: 'GET',
+      route: '/users/@me',
     },
   },
 

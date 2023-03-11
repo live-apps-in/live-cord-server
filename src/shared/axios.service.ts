@@ -46,8 +46,8 @@ export class AxiosService {
     await axios(axiosConfig)
       .then((res) => (resData = res.data))
       .catch((err) => {
-        console.log(err);
-        throw new HttpException('Bad Request - Internal API fail', 400);
+        console.log(err.response.data);
+        throw new HttpException('Bad Request - Internal API fail', 500);
         // console.log(err);
       });
     return resData;

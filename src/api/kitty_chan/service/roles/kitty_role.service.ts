@@ -3,18 +3,11 @@ import { HttpException } from '@nestjs/common/exceptions';
 import { DiscordAPIService } from 'src/shared/discord_api.service';
 import {
   CreateKittyReactionRolesDto,
-  KittyReactionRolesActionDto,
   KittyRolesDto,
 } from 'src/api/kitty_chan/_dto/KittyRoles.dto';
 import { KittyReactionRolesRepo } from 'src/api/kitty_chan/repository/roles/kitty_reaction_roles.repo';
 import { Types } from 'mongoose';
-import {
-  AxiosConfig,
-  AxiosService,
-  InternalAuthPayload,
-} from 'src/shared/axios.service';
-import { BOTS } from 'src/core/constants';
-import apiConfig from 'src/config/api.config';
+import { AxiosService } from 'src/shared/axios.service';
 import { KittyGuildRepository } from 'src/api/kitty_chan/repository/kitty_guild.repository';
 import { Client, ClientGrpc } from '@nestjs/microservices';
 import { microserviceOptions } from 'src/microservice/grpc_client_options';

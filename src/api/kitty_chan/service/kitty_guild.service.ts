@@ -7,6 +7,7 @@ import { EditKittyGuildAdminDto } from 'src/api/kitty_chan/_dto/KittyGuildAdmin.
 import { UserRepository } from 'src/api/users/repository/users.repository';
 import { BOTS } from 'src/core/constants';
 import { AxiosService } from 'src/shared/axios.service';
+import { DiscordAPIService } from 'src/shared/discord_api.service';
 
 @Injectable()
 export class KittyGuildService {
@@ -15,6 +16,8 @@ export class KittyGuildService {
     @Inject(UserRepository) private readonly userRepo: UserRepository,
     @Inject(KittyGuildRepository)
     private readonly guildRepo: KittyGuildRepository,
+    @Inject(DiscordAPIService)
+    private readonly discordAPIService: DiscordAPIService,
   ) {}
 
   ///Get Guild Profile
@@ -59,6 +62,18 @@ export class KittyGuildService {
     });
 
     return await editFeature;
+  }
+
+  /**Emojis */
+  async getGuildEmojis(userId: Types.ObjectId, guildId: string) {
+    const checkPermission = await this.fetchPermission(userId, guildId);
+
+    if (!checkPermission.hasPermission) {
+      throw new HttpException('Forbidden Guild Access', 403);
+    }
+
+    const emojis = await this.discordAPIService.getGuildEmojis(guildId);
+    return { emojis };
   }
 
   //**Admin**//
@@ -119,7 +134,7 @@ export class KittyGuildService {
     };
 
     ///If Discord Profile not verified
-    if (!user.discord?.id && !user.discord.isVerified) {
+    if (!user.discord?.id) {
       userPermission.hasPermission = false;
       userPermission.error = {
         message: 'Discord Profile not verified',

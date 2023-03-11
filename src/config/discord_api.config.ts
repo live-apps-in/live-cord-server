@@ -4,7 +4,7 @@ export const DISCORD_API_CONFIG = {
   baseURL: 'https://discord.com/api/v9',
 
   actions: {
-    ///Fetch Guild
+    /**Guild */
     getGuild: {
       method: 'GET',
       route: (guildId) => {
@@ -12,7 +12,14 @@ export const DISCORD_API_CONFIG = {
       },
     },
 
-    ///User Profile @me
+    getGuildEmojis: {
+      method: 'GET',
+      route: (guildId) => {
+        return `/guilds/${guildId}/emojis`;
+      },
+    },
+
+    /**User */
     fetchUserProfile: {
       method: 'GET',
       route: '/users/@me',

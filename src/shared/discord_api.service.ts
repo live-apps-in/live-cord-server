@@ -13,12 +13,25 @@ export class DiscordAPIService {
     @Inject(AxiosService) private readonly axiosService: AxiosService,
   ) {}
 
+  /**Guild */
   async getGuild(guildId: string) {
     const { baseURL, actions, header } = DISCORD_API_CONFIG;
     const res = await this.axiosService.axiosInstance({
       url: baseURL,
       method: actions.getGuild.method,
       route: actions.getGuild.route(guildId),
+      headers: header.Authorization(BOTS.kitty_chan),
+    } as AxiosConfig);
+
+    return res;
+  }
+
+  async getGuildEmojis(guildId: string) {
+    const { baseURL, actions, header } = DISCORD_API_CONFIG;
+    const res = await this.axiosService.axiosInstance({
+      url: baseURL,
+      method: actions.getGuild.method,
+      route: actions.getGuildEmojis.route(guildId),
       headers: header.Authorization(BOTS.kitty_chan),
     } as AxiosConfig);
 

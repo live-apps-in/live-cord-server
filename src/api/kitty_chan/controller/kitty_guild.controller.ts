@@ -82,6 +82,13 @@ export class KittyGuildController implements OnModuleInit {
     );
   }
 
+  //**Emoji */
+  @Get('/:guildId/emojis')
+  async getGuildEmojis(@Param('guildId') guildId: string, @Request() req: Req) {
+    const { userId } = req.userData;
+    return this.guildService.getGuildEmojis(userId, guildId);
+  }
+
   /**
    * gRPC Controllers
    */

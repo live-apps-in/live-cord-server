@@ -1,40 +1,16 @@
-import {
-  Controller,
-  Get,
-  Inject,
-  Request,
-  Param,
-  Patch,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Controller, Get, Inject, Request, Param, Patch } from '@nestjs/common';
 import { GUILD_ACTIONS } from 'src/api/kitty_chan/enum/kitty_guild_actions';
 import { EditKittyGuildAdminDto } from 'src/api/kitty_chan/_dto/KittyGuildAdmin.dto';
 import { KittyGuildService } from 'src/api/kitty_chan/service/kitty_guild.service';
 import { Req } from 'src/core/custom_types';
-import { Client, ClientGrpc, GrpcMethod } from '@nestjs/microservices';
-import { microserviceOptions } from 'src/microservice/grpc_client_options';
-import {
-  HelloRequest,
-  HelloResponse,
-  HelloWorld,
-} from 'src/proto/interface/live_cord.interface';
 
 @Controller('kitty_chan/guild')
-export class KittyGuildController implements OnModuleInit {
-  @Client(microserviceOptions)
-  ///gRPC Config
-  private client: ClientGrpc;
-  private grpcService: HelloWorld;
-
+export class KittyGuildController {
   constructor(
     @Inject(KittyGuildService) private readonly guildService: KittyGuildService,
     @Inject(KittyGuildService)
     private readonly guildConfigService: KittyGuildService,
   ) {}
-
-  onModuleInit() {
-    // this.grpcService = this.client.getService<HelloWorld>('HelloWorld');
-  }
 
   ///View Guild of a User
   @Get('')
@@ -87,13 +63,5 @@ export class KittyGuildController implements OnModuleInit {
   async getGuildEmojis(@Param('guildId') guildId: string, @Request() req: Req) {
     const { userId } = req.userData;
     return this.guildService.getGuildEmojis(userId, guildId);
-  }
-
-  /**
-   * gRPC Controllers
-   */
-  @GrpcMethod('HelloWorld', 'hello')
-  async hello(data: HelloRequest): Promise<HelloResponse> {
-    return { message: data.name };
   }
 }

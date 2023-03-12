@@ -16,9 +16,14 @@ import { DatabaseModule } from 'src/database/database.module';
 import { AxiosService } from 'src/shared/axios.service';
 import { kittyReactionRolesProvider } from 'src/api/kitty_chan/model/providers/kitty_reaction_roles.provider';
 import { KittyReactionRolesRepo } from 'src/api/kitty_chan/repository/roles/kitty_reaction_roles.repo';
-
+import { ClientsModule } from '@nestjs/microservices';
+import { kittyChangRPCOptions } from 'src/microservice/grpc_client_options';
 @Module({
-  imports: [UserModule, DatabaseModule],
+  imports: [
+    UserModule,
+    DatabaseModule,
+    ClientsModule.register([...kittyChangRPCOptions]),
+  ],
   controllers: [KittyGuildController, KittyRolesController],
   providers: [
     KittychanService,

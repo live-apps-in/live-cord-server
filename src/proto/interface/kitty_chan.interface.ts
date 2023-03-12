@@ -1,9 +1,8 @@
-import * as grpc from '@grpc/grpc-js';
+import { Observable } from 'rxjs';
 export interface ReactionRoleService {
   reactionRolesAction(
     payload: ReactionRoleActionReqDto,
-    metadata: grpc.Metadata,
-  ): Promise<ReactionRoleActionResDto>;
+  ): Observable<ReactionRoleActionResDto>;
 }
 
 interface ReactionRoleActionReqDto {

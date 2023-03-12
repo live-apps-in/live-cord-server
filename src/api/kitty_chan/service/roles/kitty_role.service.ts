@@ -9,17 +9,12 @@ import { KittyReactionRolesRepo } from 'src/api/kitty_chan/repository/roles/kitt
 import { Types } from 'mongoose';
 import { AxiosService } from 'src/shared/axios.service';
 import { KittyGuildRepository } from 'src/api/kitty_chan/repository/kitty_guild.repository';
-import { Client, ClientGrpc } from '@nestjs/microservices';
-import { microserviceOptions } from 'src/microservice/grpc_client_options';
+import { ClientGrpc } from '@nestjs/microservices';
 import { ReactionRoleService } from 'src/proto/interface/kitty_chan.interface';
-import * as grpc from '@grpc/grpc-js';
 
 @Injectable()
 export class KittyRolesService implements OnModuleInit {
-  @Client(microserviceOptions)
-  private client: ClientGrpc;
-  private grpcRolesService: ReactionRoleService;
-
+  private grpcReactionRolesService: ReactionRoleService;
   constructor(
     @Inject(DiscordAPIService)
     private readonly kittyDiscordService: DiscordAPIService,
@@ -29,12 +24,12 @@ export class KittyRolesService implements OnModuleInit {
     private readonly kittyGuildRepository: KittyGuildRepository,
     @Inject(AxiosService)
     private readonly axiosService: AxiosService,
+    @Inject('kitty_chan_roles_grpc') private readonly service: ClientGrpc,
   ) {}
 
   onModuleInit() {
-    this.grpcRolesService = this.client.getService<ReactionRoleService>(
-      'ReactionRoleService',
-    );
+    this.grpcReactionRolesService =
+      this.service.getService<ReactionRoleService>('ReactionRoleService');
   }
 
   ///Roles
@@ -96,19 +91,14 @@ export class KittyRolesService implements OnModuleInit {
     if (!config?.reaction_roles_channel)
       throw new HttpException('Reaction Role channel not set', 400);
 
-    const getAuth: any = new grpc.Metadata().add('authorization', 'hello');
-
     const reactionRoleAction: any =
-      await this.grpcRolesService.reactionRolesAction(
-        {
-          name: reaction_role.name,
-          action,
-          channelId: config.reaction_roles_channel,
-          discordEmbedConfig: reaction_role.discordEmbedConfig,
-          reactionRoleMessageRef: reaction_role.reactionRoleMessageRef,
-        },
-        getAuth,
-      );
+      await this.grpcReactionRolesService.reactionRolesAction({
+        name: reaction_role.name,
+        action,
+        channelId: config.reaction_roles_channel,
+        discordEmbedConfig: reaction_role.discordEmbedConfig,
+        reactionRoleMessageRef: reaction_role.reactionRoleMessageRef,
+      });
 
     const res = await reactionRoleAction.toPromise();
     console.log(res);

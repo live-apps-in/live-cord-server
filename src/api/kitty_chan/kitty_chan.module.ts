@@ -41,7 +41,7 @@ export class KittychanModule implements NestModule {
     consumer.apply(AuthGuard).forRoutes(KittyGuildController);
     consumer.apply(AuthGuard).forRoutes(KittyRolesController);
 
-    ///Guild Access Controller
+    ///Guild Access
     consumer.apply(GuildAccess).forRoutes(KittyGuildController);
     consumer.apply(GuildAccess).forRoutes(KittyRolesController);
   }

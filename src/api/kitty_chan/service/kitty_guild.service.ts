@@ -66,12 +66,6 @@ export class KittyGuildService {
 
   /**Emojis */
   async getGuildEmojis(userId: Types.ObjectId, guildId: string) {
-    const checkPermission = await this.fetchPermission(userId, guildId);
-
-    if (!checkPermission.hasPermission) {
-      throw new HttpException('Forbidden Guild Access', 403);
-    }
-
     const emojis = await this.discordAPIService.getGuildEmojis(guildId);
     return { emojis };
   }

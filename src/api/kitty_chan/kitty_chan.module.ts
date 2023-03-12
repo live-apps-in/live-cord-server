@@ -37,11 +37,12 @@ import { KittyReactionRolesRepo } from 'src/api/kitty_chan/repository/roles/kitt
 })
 export class KittychanModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    ///Guild Controller
+    ///Auth Middleware
     consumer.apply(AuthGuard).forRoutes(KittyGuildController);
-
-    ///Roles Controller
     consumer.apply(AuthGuard).forRoutes(KittyRolesController);
-    consumer.apply(GuildAccess).forRoutes(KittyRolesController); //Validate and retrieve Guild Access Permission
+
+    ///Guild Access Controller
+    consumer.apply(GuildAccess).forRoutes(KittyGuildController);
+    consumer.apply(GuildAccess).forRoutes(KittyRolesController);
   }
 }

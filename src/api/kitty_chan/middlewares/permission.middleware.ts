@@ -21,7 +21,7 @@ export class GuildAccess implements NestMiddleware {
 
     const guild = await this.kittyGuildRepo.getSingleUserGuild(
       guildId,
-      user.discord.id,
+      user.discord?.id,
     );
     if (
       !guild ||

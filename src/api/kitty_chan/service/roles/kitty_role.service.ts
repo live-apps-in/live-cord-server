@@ -96,20 +96,21 @@ export class KittyRolesService implements OnModuleInit {
         name: reaction_role.name,
         action,
         channelId: config.reaction_roles_channel,
+        guildId: reaction_role.guildId,
         discordEmbedConfig: reaction_role.discordEmbedConfig,
+        rolesMapping: reaction_role.rolesMapping,
         reactionRoleMessageRef: reaction_role.reactionRoleMessageRef,
       });
 
     const res = await reactionRoleAction.toPromise();
-    console.log(res);
 
-    if (!res?.reaction_role_message_ref)
+    if (!res?.reactionRoleMessageRef)
       throw new HttpException('Unable to set Reaction Role', 400);
 
     await this.kittyReactionRolesRepo.updateById(reaction_role_id, {
       $set: {
         isActive: true,
-        reaction_role_message_ref: res.reaction_role_message_ref,
+        reactionRoleMessageRef: res.reactionRoleMessageRef,
       },
     });
 

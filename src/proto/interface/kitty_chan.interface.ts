@@ -8,9 +8,11 @@ export interface ReactionRoleService {
 interface ReactionRoleActionReqDto {
   name: string;
   channelId: string;
+  guildId: string;
   action: string;
-  reactionRoleMessageRef: string;
   discordEmbedConfig: string;
+  rolesMapping: any[];
+  reactionRoleMessageRef: string;
 }
 
 interface ReactionRoleActionResDto {

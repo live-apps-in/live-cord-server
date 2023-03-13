@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { IKittyGuild } from 'src/api/kitty_chan/model/kitty_guild.model';
+import { IUser } from 'src/api/users/model/users.model';
 import { GUILD_USERS } from 'src/core/constants';
 import { TYPES } from 'src/core/types';
 
@@ -8,6 +9,7 @@ import { TYPES } from 'src/core/types';
 export class KittyGuildRepository {
   constructor(
     @Inject(TYPES.GuildModel) private readonly Guild: Model<IKittyGuild>,
+    @Inject(TYPES.UsersModel) private readonly User: Model<IUser>,
   ) {}
 
   ///Create
@@ -38,6 +40,15 @@ export class KittyGuildRepository {
   }
 
   //Custom
+  ///Get All User Guilds
+  async getAllUserGuild(userId: Types.ObjectId) {
+    return this.User.aggregate([
+      {
+        $match: { _id: new Types.ObjectId(userId) },
+      },
+    ]);
+  }
+
   ///Get Guild with userId and guildId
   async getSingleUserGuild(guildId: string, discord_id: string) {
     const guilds = await this.Guild.aggregate([
@@ -73,7 +84,7 @@ export class KittyGuildRepository {
   }
 
   ///Get Guild under a user and map permission
-  async getUserGuild(discord_id: string) {
+  async getAdminGuildByUser(discord_id: string) {
     const guilds = await this.Guild.aggregate([
       {
         $match: {

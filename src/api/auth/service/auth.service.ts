@@ -11,12 +11,16 @@ import * as jwt from 'jsonwebtoken';
 import * as DiscordOAuth2 from 'discord-oauth2';
 import 'dotenv/config';
 import { DiscordAPIService } from 'src/shared/discord_api.service';
+import { GuildService } from 'src/proto/interface/kitty_chan.interface';
+import { ClientGrpc } from '@nestjs/microservices';
+import { OnModuleInit } from '@nestjs/common/interfaces';
 @Injectable()
-export class AuthService {
+export class AuthService implements OnModuleInit {
   private JWT_SECRET = process.env.JWT_SECRET;
   private DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
   private DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
   private DISCORD_REDIRECT_URL = process.env.DISCORD_REDIRECT_URL;
+  private kittyGuildGrpcService: GuildService;
 
   private oauth = new DiscordOAuth2({
     clientId: this.DISCORD_CLIENT_ID,
@@ -30,10 +34,16 @@ export class AuthService {
     @Inject(KittychanService)
     private readonly kittychanService: KittychanService,
     @Inject(TYPES.AuthModel) private readonly Auth: Model<IAuth>,
+    @Inject('kitty_chan_grpc') private readonly kittyChanGrpc: ClientGrpc,
   ) {}
 
+  onModuleInit() {
+    this.kittyGuildGrpcService =
+      this.kittyChanGrpc.getService<GuildService>('GuildService');
+  }
+
   ///Connect to Discord
-  async connectToDiscord(code: string, userId) {
+  async connectToDiscord(code: string, userId: Types.ObjectId) {
     const token = await this.oauth
       .tokenRequest({
         code,
@@ -47,13 +57,17 @@ export class AuthService {
 
     if (!token) throw new HttpException('Invalid Auth Code', 400);
 
-    const user = await this.discordAPIService.fetchUserProfile(
+    ///Fetch Discord user profile
+    const discordUser = await this.discordAPIService.fetchUserProfile(
       token.access_token,
     );
-    if (!user) throw new HttpException('Cannot connect to discord', 400);
+    if (!discordUser) throw new HttpException('Cannot connect to discord', 400);
+
+    ///Fetch All User Guilds
+    // const userGuilds: any = await this.kittyGuildGrpcService.getAllUserGuilds({ discordId: '516438995824017420' }).toPromise()
 
     await this.userRepo.update(userId, {
-      discord: user,
+      discord: discordUser,
     });
 
     return {

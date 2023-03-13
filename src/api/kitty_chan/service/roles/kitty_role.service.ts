@@ -24,12 +24,12 @@ export class KittyRolesService implements OnModuleInit {
     private readonly kittyGuildRepository: KittyGuildRepository,
     @Inject(AxiosService)
     private readonly axiosService: AxiosService,
-    @Inject('kitty_chan_roles_grpc') private readonly service: ClientGrpc,
+    @Inject('kitty_chan_grpc') private readonly kittyChanGrpc: ClientGrpc,
   ) {}
 
   onModuleInit() {
     this.grpcReactionRolesService =
-      this.service.getService<ReactionRoleService>('ReactionRoleService');
+      this.kittyChanGrpc.getService<ReactionRoleService>('ReactionRoleService');
   }
 
   ///Roles
@@ -91,8 +91,8 @@ export class KittyRolesService implements OnModuleInit {
     if (!config?.reaction_roles_channel)
       throw new HttpException('Reaction Role channel not set', 400);
 
-    const reactionRoleAction: any =
-      await this.grpcReactionRolesService.reactionRolesAction({
+    const reactionRoleAction: any = await this.grpcReactionRolesService
+      .reactionRolesAction({
         name: reaction_role.name,
         action,
         channelId: config.reaction_roles_channel,
@@ -100,20 +100,19 @@ export class KittyRolesService implements OnModuleInit {
         discordEmbedConfig: reaction_role.discordEmbedConfig,
         rolesMapping: reaction_role.rolesMapping,
         reactionRoleMessageRef: reaction_role.reactionRoleMessageRef,
-      });
+      })
+      .toPromise();
 
-    const res = await reactionRoleAction.toPromise();
-
-    if (!res?.reactionRoleMessageRef)
+    if (!reactionRoleAction?.reactionRoleMessageRef)
       throw new HttpException('Unable to set Reaction Role', 400);
 
     await this.kittyReactionRolesRepo.updateById(reaction_role_id, {
       $set: {
         isActive: true,
-        reactionRoleMessageRef: res.reactionRoleMessageRef,
+        reactionRoleMessageRef: reactionRoleAction.reactionRoleMessageRef,
       },
     });
 
-    return res;
+    return reactionRoleAction;
   }
 }

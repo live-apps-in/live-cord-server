@@ -1,6 +1,11 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AuthGuard } from 'src/api/auth/guards/auth.guard';
-import { KittyGuildController } from 'src/api/kitty_chan/controller/kitty_guild.controller';
+import { KittyGuildController } from 'src/api/kitty_chan/controller/guild/kitty_guild.controller';
 import { KittyRolesController } from 'src/api/kitty_chan/controller/roles/kitty_roles.controller';
 import { GuildAccess } from 'src/api/kitty_chan/middlewares/permission.middleware';
 import { guildProvider } from 'src/api/kitty_chan/model/providers/kitty_guild.provider';
@@ -47,7 +52,9 @@ export class KittychanModule implements NestModule {
     consumer.apply(AuthGuard).forRoutes(KittyRolesController);
 
     ///Guild Access
-    consumer.apply(GuildAccess).forRoutes(KittyGuildController);
+    consumer
+      .apply(GuildAccess)
+      .exclude({ path: '', method: RequestMethod.GET });
     consumer.apply(GuildAccess).forRoutes(KittyRolesController);
   }
 }

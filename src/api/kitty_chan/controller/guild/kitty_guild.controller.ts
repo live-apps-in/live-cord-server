@@ -12,11 +12,11 @@ export class KittyGuildController {
     private readonly guildConfigService: KittyGuildService,
   ) {}
 
-  ///View Guild of a User
+  ///View Guilds of a User
   @Get('')
   async view_guilds(@Request() req: Req) {
     const { userId } = req.userData;
-    return await this.guildService.get_guild_by_userId(userId);
+    return this.guildService.getAllUserGuilds(userId);
   }
 
   ///View Guild Profile

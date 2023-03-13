@@ -5,7 +5,7 @@ import { join } from 'path';
 // Same options object used by microservice server
 export const kittyChangRPCOptions: ClientsModuleOptions = [
   {
-    name: 'kitty_chan_roles_grpc',
+    name: 'kitty_chan_grpc',
     transport: Transport.GRPC,
     options: {
       package: 'kitty_chan',

@@ -20,7 +20,7 @@ export class KittyGuildService {
     private readonly discordAPIService: DiscordAPIService,
   ) {}
 
-  ///Get Guild Profile
+  ///Guild
   async getProfile(userId: Types.ObjectId, guildId: string) {
     ///Validate Permission
     const fetchPermission = await this.fetchPermission(userId, guildId);
@@ -37,6 +37,23 @@ export class KittyGuildService {
     });
 
     return getFeature;
+  }
+
+  ///Find Guilds under a user and map permissions
+  async get_guild_by_userId(userId: Types.ObjectId) {
+    const user = await this.userRepo.findById(userId);
+    if (!user) throw new HttpException('User not found', 400);
+
+    const discord_id = user.discord.id;
+    if (!discord_id)
+      throw new HttpException('Discord Profile not verified yet!', 400);
+
+    return this.guildRepo.getAdminGuildByUser(discord_id);
+  }
+
+  ///Find All Guilds of a User
+  async getAllUserGuilds(userId: Types.ObjectId) {
+    return await this.guildRepo.getAllUserGuild(userId);
   }
 
   ////**Features**////
@@ -101,18 +118,6 @@ export class KittyGuildService {
     return {
       message: 'Update Success',
     };
-  }
-
-  ///Find Guilds under a user and map permissions
-  async get_guild_by_userId(userId: Types.ObjectId) {
-    const user = await this.userRepo.findById(userId);
-    if (!user) throw new HttpException('User not found', 400);
-
-    const discord_id = user.discord.id;
-    if (!discord_id)
-      throw new HttpException('Discord Profile not verified yet!', 400);
-
-    return await this.guildRepo.getUserGuild(discord_id);
   }
 
   ///Extract Discord and guild Permission

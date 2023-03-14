@@ -20,9 +20,14 @@ export const DISCORD_API_CONFIG = {
     },
 
     /**User */
-    fetchUserProfile: {
+    getUserProfile: {
       method: 'GET',
       route: '/users/@me',
+    },
+
+    getUserGuilds: {
+      method: 'GET',
+      route: '/users/@me/guilds',
     },
   },
 

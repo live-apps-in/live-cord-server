@@ -43,7 +43,7 @@ import { kittyChangRPCOptions } from 'src/microservice/grpc_client_options';
     ...usersProvider,
     ...kittyReactionRolesProvider,
   ],
-  exports: [KittychanService],
+  exports: [KittychanService, KittyGuildRepository],
 })
 export class KittychanModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

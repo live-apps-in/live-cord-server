@@ -46,6 +46,29 @@ export class KittyGuildRepository {
       {
         $match: { _id: new Types.ObjectId(userId) },
       },
+      {
+        $addFields: { guildId: '$guilds' },
+      },
+      {
+        $project: { guildId: 1 },
+      },
+      {
+        $unwind: '$guildId',
+      },
+      {
+        $lookup: {
+          from: 'kitty_guilds',
+          localField: 'guildId',
+          foreignField: 'guildId',
+          as: 'guild',
+        },
+      },
+      {
+        $unwind: '$guild',
+      },
+      {
+        $replaceRoot: { newRoot: '$guild' },
+      },
     ]);
   }
 
@@ -81,6 +104,13 @@ export class KittyGuildRepository {
       guilds[0].discord_id = discord_id;
     }
     return guilds[0];
+  }
+
+  ///Get Mutual User Guilds
+  async getMutualUserGuilds(guildIds: string[]) {
+    return this.Guild.find({
+      guildId: { $in: guildIds },
+    });
   }
 
   ///Get Guild under a user and map permission

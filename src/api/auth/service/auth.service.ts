@@ -14,6 +14,8 @@ import { DiscordAPIService } from 'src/shared/discord_api.service';
 import { GuildService } from 'src/proto/interface/kitty_chan.interface';
 import { ClientGrpc } from '@nestjs/microservices';
 import { OnModuleInit } from '@nestjs/common/interfaces';
+import { wait } from 'src/jobs/rate-limiter';
+import { KittyGuildRepository } from 'src/api/kitty_chan/repository/kitty_guild.repository';
 @Injectable()
 export class AuthService implements OnModuleInit {
   private JWT_SECRET = process.env.JWT_SECRET;
@@ -34,6 +36,8 @@ export class AuthService implements OnModuleInit {
     @Inject(KittychanService)
     private readonly kittychanService: KittychanService,
     @Inject(TYPES.AuthModel) private readonly Auth: Model<IAuth>,
+    @Inject(KittyGuildRepository)
+    private readonly kittyGuildRepo: KittyGuildRepository,
     @Inject('kitty_chan_grpc') private readonly kittyChanGrpc: ClientGrpc,
   ) {}
 
@@ -47,11 +51,12 @@ export class AuthService implements OnModuleInit {
     const token = await this.oauth
       .tokenRequest({
         code,
-        scope: ['identify'],
+        scope: ['identify', 'guilds'],
         grantType: 'authorization_code',
         redirectUri: this.DISCORD_REDIRECT_URL,
       })
-      .catch(() => {
+      .catch((e) => {
+        console.log(e);
         throw new HttpException('Invalid Auth Code', 400);
       });
 
@@ -64,14 +69,25 @@ export class AuthService implements OnModuleInit {
     if (!discordUser) throw new HttpException('Cannot connect to discord', 400);
 
     ///Fetch All User Guilds
-    // const userGuilds: any = await this.kittyGuildGrpcService.getAllUserGuilds({ discordId: '516438995824017420' }).toPromise()
+    await wait(1);
+    const userGuilds = await this.discordAPIService.getUserGuilds(
+      token.access_token,
+    );
+    if (!userGuilds) throw new HttpException('Cannot fetch user guilds', 500);
 
+    ///Get all mutual guilds
+    const mutualGuilds = await this.kittyGuildRepo.getMutualUserGuilds(
+      userGuilds.map((item) => item.id),
+    );
+
+    ///Update Discord payload and mutual guilds
     await this.userRepo.update(userId, {
       discord: discordUser,
+      guilds: mutualGuilds.map((item) => item.guildId),
     });
 
     return {
-      message: 'ok',
+      message: 'Connected to Discord',
     };
   }
 

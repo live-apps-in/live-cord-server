@@ -1,15 +1,18 @@
 syntax = "proto3";
-
 package live_cord;
 
-service HelloWorld {
-  rpc hello (HelloRequest) returns (HelloResponse);
+/** LiveCord Services */
+service GuildService{
+  rpc syncNewGuildMembers (NewGuildMemberReq) returns (NewGuildMemberRes);
 }
 
-message HelloRequest {
-  string name = 1;
+
+/** Guild Service **/
+message NewGuildMemberReq{
+  string guildId = 1;
+  string userId = 2;
 }
 
-message HelloResponse {
+message NewGuildMemberRes{
   string message = 1;
 }

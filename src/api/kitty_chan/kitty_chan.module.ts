@@ -23,13 +23,18 @@ import { kittyReactionRolesProvider } from 'src/api/kitty_chan/model/providers/k
 import { KittyReactionRolesRepo } from 'src/api/kitty_chan/repository/roles/kitty_reaction_roles.repo';
 import { ClientsModule } from '@nestjs/microservices';
 import { kittyChangRPCOptions } from 'src/microservice/grpc_client_options';
+import { KittyGuildGrpcController } from 'src/api/kitty_chan/controller/guild/kitty_guild.gRPC.controller';
 @Module({
   imports: [
     UserModule,
     DatabaseModule,
     ClientsModule.register([...kittyChangRPCOptions]),
   ],
-  controllers: [KittyGuildController, KittyRolesController],
+  controllers: [
+    KittyGuildController,
+    KittyGuildGrpcController,
+    KittyRolesController,
+  ],
   providers: [
     KittychanService,
     KittyRolesService,

@@ -1,11 +1,12 @@
-export interface HelloWorld {
-  hello(data: HelloRequest): HelloResponse;
+export interface GuildService {
+  hello(data: NewGuildMemberReq): NewGuildMemberRes;
 }
 
-export interface HelloRequest {
-  name: string;
+export interface NewGuildMemberReq {
+  guildId: string;
+  userId: string;
 }
 
-export interface HelloResponse {
+export interface NewGuildMemberRes {
   message: string;
 }

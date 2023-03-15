@@ -31,4 +31,13 @@ export class UserRepository {
       },
     );
   }
+
+  async updateByDiscordId(discordId: string, payload: any) {
+    await this.user.updateOne(
+      { 'discord.id': discordId },
+      {
+        ...payload,
+      },
+    );
+  }
 }

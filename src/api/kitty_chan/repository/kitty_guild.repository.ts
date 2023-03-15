@@ -47,10 +47,10 @@ export class KittyGuildRepository {
         $match: { _id: new Types.ObjectId(userId) },
       },
       {
-        $addFields: { guildId: '$guilds' },
+        $addFields: { guildId: '$guilds', discordId: '$discord.id' },
       },
       {
-        $project: { guildId: 1 },
+        $project: { guildId: 1, discordId: 1 },
       },
       {
         $unwind: '$guildId',
@@ -67,7 +67,35 @@ export class KittyGuildRepository {
         $unwind: '$guild',
       },
       {
-        $replaceRoot: { newRoot: '$guild' },
+        $replaceRoot: {
+          newRoot: { $mergeObjects: [{ discordId: '$discordId' }, '$guild'] },
+        },
+      },
+      {
+        $addFields: {
+          userRole: {
+            $cond: [
+              { $eq: ['$ownerId', '$discordId'] },
+              GUILD_USERS.guild_owner,
+              {
+                $cond: [
+                  { $in: ['$discordId', '$admins'] },
+                  GUILD_USERS.guild_admin,
+                  GUILD_USERS.guild_user,
+                ],
+              },
+            ],
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          guildId: 1,
+          name: 1,
+          ownerId: 1,
+          userRole: 1,
+        },
       },
     ]);
   }

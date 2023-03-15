@@ -1,12 +1,13 @@
 export interface GuildService {
-  hello(data: NewGuildMemberReq): NewGuildMemberRes;
+  syncCreateGuildMember(data: GuildMemberReq): GuildMemberRes;
+  syncRemoveGuildMember(data: GuildMemberReq): GuildMemberRes;
 }
 
-export interface NewGuildMemberReq {
+export interface GuildMemberReq {
   guildId: string;
   userId: string;
 }
 
-export interface NewGuildMemberRes {
+export interface GuildMemberRes {
   message: string;
 }

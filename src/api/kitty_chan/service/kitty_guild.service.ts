@@ -56,6 +56,24 @@ export class KittyGuildService {
     return await this.guildRepo.getAllUserGuild(userId);
   }
 
+  ///Sync new Guild members
+  async syncCreateGuildMember(guildId: string, userId: string) {
+    await this.userRepo.updateByDiscordId(userId, {
+      $addToSet: {
+        guilds: guildId,
+      },
+    });
+  }
+
+  ///Sync new Guild members
+  async syncRemoveGuildMember(guildId: string, userId: string) {
+    await this.userRepo.updateByDiscordId(userId, {
+      $pull: {
+        guilds: guildId,
+      },
+    });
+  }
+
   ////**Features**////
   async edit_guild_feature(
     userId: Types.ObjectId,

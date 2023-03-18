@@ -26,24 +26,9 @@ export class UserService {
     const getUser = await this.userRepo.findByEmail(payload.email);
     if (getUser) throw new HttpException('User Already Exists', 400);
 
-    ///Fetch Discord profile
-    const discordProfile = await this.kittychanService.profile(
-      payload.discord_username,
-    );
-
-    const build_discord_profile: any = {
-      username: payload.discord_username,
-      isVerified: false,
-    };
-
-    if (discordProfile?.isValid && discordProfile?.id) {
-      build_discord_profile.id = discordProfile.id;
-    }
-
     const userSavePayload = new InternalCreateUserDto(
       payload.name,
       payload.email,
-      build_discord_profile,
     );
 
     const createUser = await this.userRepo.create(userSavePayload);

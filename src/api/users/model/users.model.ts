@@ -4,7 +4,10 @@ export const UserSchema = new Schema({
   name: String,
   email: String,
   guilds: Array<string>,
-  discord: Object,
+  discord: {
+    type: Object,
+    default: null
+  },
 });
 
 export interface IUser {

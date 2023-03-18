@@ -6,18 +6,10 @@ export class CreateUserDto {
 
   @IsEmail()
   public email: string;
-
-  @IsString()
-  public discord_username: string;
 }
 export class InternalCreateUserDto {
   constructor(
     public name: string,
-    public email: string,
-    public discord: {
-      id?: string;
-      username: string;
-      isVerified: boolean;
-    },
+    public email: string
   ) {}
 }

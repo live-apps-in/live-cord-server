@@ -6,7 +6,7 @@ export const UserSchema = new Schema({
   guilds: Array<string>,
   discord: {
     type: Object,
-    default: null
+    default: null,
   },
 });
 

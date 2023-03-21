@@ -8,8 +8,5 @@ export class CreateUserDto {
   public email: string;
 }
 export class InternalCreateUserDto {
-  constructor(
-    public name: string,
-    public email: string
-  ) {}
+  constructor(public name: string, public email: string) {}
 }

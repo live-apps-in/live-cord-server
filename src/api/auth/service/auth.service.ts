@@ -86,8 +86,10 @@ export class AuthService implements OnModuleInit {
       guilds: mutualGuilds.map((item) => item.guildId),
     });
 
+    const updatedUserProfile = await this.userRepo.findById(userId);
+
     return {
-      message: 'Connected to Discord',
+      ...updatedUserProfile,
     };
   }
 

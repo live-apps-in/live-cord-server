@@ -29,6 +29,7 @@
     "@discordjs/rest": "^1.6.0",
     "@grpc/grpc-js": "^1.8.11",
     "@grpc/proto-loader": "^0.7.5",
+    "@live-apps/discord": "^1.0.3",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.3.9",
     "@nestjs/microservices": "^9.3.9",

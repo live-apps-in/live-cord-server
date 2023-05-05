@@ -8,6 +8,7 @@ import { UserRepository } from 'src/modules/users/repository/users.repository';
 import { BOTS } from 'src/core/constants';
 import { AxiosService } from 'src/shared/axios.service';
 import { DiscordAPIService } from 'src/shared/discord_api.service';
+import { KittyDiscordService } from 'src/modules/kitty_chan/shared/@live-apps-discord/service/kitty_discord.service';
 
 @Injectable()
 export class KittyGuildService {
@@ -18,25 +19,20 @@ export class KittyGuildService {
     private readonly guildRepo: KittyGuildRepository,
     @Inject(DiscordAPIService)
     private readonly discordAPIService: DiscordAPIService,
+    @Inject(KittyDiscordService)
+    private readonly kittyDiscordService: KittyDiscordService,
   ) {}
 
   ///Guild
   async getProfile(userId: Types.ObjectId, guildId: string) {
     ///Validate Permission
     const fetchPermission = await this.fetchPermission(userId, guildId);
-    if (!fetchPermission.hasPermission)
+
+    if (!fetchPermission.hasPermission) {
       throw new HttpException({ error: fetchPermission.error }, 400);
+    }
 
-    const getFeature = await this.axiosService.handle({
-      scope: BOTS.kitty_chan,
-      action: 'guild_profile',
-      body: {
-        guildId,
-        discord_id: fetchPermission.discord_id,
-      },
-    });
-
-    return getFeature;
+    return this.kittyDiscordService.getGuildById(guildId);
   }
 
   ///Find Guilds under a user and map permissions

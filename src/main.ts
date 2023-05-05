@@ -3,6 +3,8 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { Transport } from '@nestjs/microservices';
 import { join } from 'path';
+import { Client } from '@live-apps/discord';
+let client: Client;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -37,3 +39,18 @@ async function bootstrap() {
   await bootstrapGrpc();
 }
 bootstrap();
+
+client = new Client({
+  events: [],
+  sync: true,
+  redisOptions: {
+    db: 0,
+    host: '127.0.0.1',
+    port: 6379,
+    pass: process.env.REDIS_PASS,
+  },
+  token: process.env.KITTY_CHAN_TOKEN,
+  logs: false,
+});
+
+export { client };

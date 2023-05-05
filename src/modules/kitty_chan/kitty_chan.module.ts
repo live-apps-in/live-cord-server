@@ -24,10 +24,13 @@ import { KittyReactionRolesRepo } from 'src/modules/kitty_chan/repository/roles/
 import { ClientsModule } from '@nestjs/microservices';
 import { kittyChangRPCOptions } from 'src/microservice/grpc_client_options';
 import { KittyGuildGrpcController } from 'src/modules/kitty_chan/controller/guild/kitty_guild.gRPC.controller';
+import { KittyDiscordModule } from 'src/modules/kitty_chan/shared/@live-apps-discord/kitty_discord.module';
+
 @Module({
   imports: [
     UserModule,
     DatabaseModule,
+    KittyDiscordModule,
     ClientsModule.register([...kittyChangRPCOptions]),
   ],
   controllers: [

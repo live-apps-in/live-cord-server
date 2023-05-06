@@ -4,8 +4,9 @@ import { ValidationPipe } from '@nestjs/common';
 import { Transport } from '@nestjs/microservices';
 import { join } from 'path';
 import { Client } from '@live-apps/discord';
+import 'dotenv'
 let client: Client;
-
+console.log(process.env)
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 

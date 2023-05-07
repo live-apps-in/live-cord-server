@@ -7,7 +7,7 @@ import { KittyRolesService } from 'src/modules/kitty_chan/service/roles/kitty_ro
  * GuildAccess Middleware is used to validate permissions
  * @param { string } guildId
  */
-@Controller('/kitty_chan/guild')
+@Controller('/kitty_chan/guild/:guildId')
 export class KittyRolesController {
   constructor(
     @Inject(KittyRolesService)
@@ -15,18 +15,10 @@ export class KittyRolesController {
   ) {}
 
   /**
-   * Fetch Roles from Discord API
-   */
-  @Get('/:guildId/roles')
-  async getRoles(@Param('guildId') guildId: string) {
-    return await this.kittyRolesService.getAllRoles(guildId);
-  }
-
-  /**
    * Set Reaction Roles Channel
    * @param {string} channelId - Discord channelId
    */
-  @Patch('/:guildId/reaction_roles/channel/:channelId')
+  @Patch('/reaction_roles/channel/:channelId')
   async setReactionRoleChannel(
     @Param('channelId') channelId: string,
     @Param('guildId') guildId: string,
@@ -40,7 +32,7 @@ export class KittyRolesController {
   /**
    * Create Reaction Roles in LiveCord
    */
-  @Post('/:guildId/reaction_roles')
+  @Post('/reaction_roles')
   async createReactionRoles(@Body() reqBody: any) {
     return await this.kittyRolesService.createReactionRoles(reqBody);
   }
@@ -48,7 +40,7 @@ export class KittyRolesController {
   /**
    * Get Reaction Roles from LiveCord
    */
-  @Get('/:guildId/reaction_roles')
+  @Get('/reaction_roles')
   async getReactionRoles(@Param('guildId') guildId: string) {
     return await this.kittyRolesService.getReactionRoles(guildId);
   }
@@ -59,7 +51,7 @@ export class KittyRolesController {
    * @param { Types.ObjectId } reaction_role_id
    * @param { string } action
    */
-  @Patch('/:guildId/reaction_roles/:reaction_role_id/:action')
+  @Patch('/reaction_roles/:reaction_role_id/:action')
   async reaction_role_actions(
     @Param('guildId') guildId: string,
     @Param('reaction_role_id') reaction_role_id: any,

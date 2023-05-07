@@ -1,13 +1,8 @@
 import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { HttpException } from '@nestjs/common/exceptions';
-import { DiscordAPIService } from 'src/shared/discord_api.service';
-import {
-  CreateKittyReactionRolesDto,
-  KittyRolesDto,
-} from 'src/modules/kitty_chan/_dto/KittyRoles.dto';
+import { CreateKittyReactionRolesDto } from 'src/modules/kitty_chan/_dto/KittyRoles.dto';
 import { KittyReactionRolesRepo } from 'src/modules/kitty_chan/repository/roles/kitty_reaction_roles.repo';
 import { Types } from 'mongoose';
-import { AxiosService } from 'src/shared/axios.service';
 import { KittyGuildRepository } from 'src/modules/kitty_chan/repository/kitty_guild.repository';
 import { ClientGrpc } from '@nestjs/microservices';
 import { ReactionRoleService } from 'src/proto/interface/kitty_chan.interface';
@@ -16,14 +11,10 @@ import { ReactionRoleService } from 'src/proto/interface/kitty_chan.interface';
 export class KittyRolesService implements OnModuleInit {
   private grpcReactionRolesService: ReactionRoleService;
   constructor(
-    @Inject(DiscordAPIService)
-    private readonly kittyDiscordService: DiscordAPIService,
     @Inject(KittyReactionRolesRepo)
     private readonly kittyReactionRolesRepo: KittyReactionRolesRepo,
     @Inject(KittyGuildRepository)
     private readonly kittyGuildRepository: KittyGuildRepository,
-    @Inject(AxiosService)
-    private readonly axiosService: AxiosService,
     @Inject('kitty_chan_grpc') private readonly kittyChanGrpc: ClientGrpc,
   ) {}
 
@@ -32,22 +23,7 @@ export class KittyRolesService implements OnModuleInit {
       this.kittyChanGrpc.getService<ReactionRoleService>('ReactionRoleService');
   }
 
-  ///Roles
-  async getAllRoles(guildId: string) {
-    const getGuild = await this.kittyDiscordService.getGuild(guildId);
-    if (!getGuild?.roles) throw new HttpException('Guild Not Found!', 400);
-
-    const roles = [];
-    getGuild.roles.map((e) => {
-      roles.push(new KittyRolesDto(e.id, e.name, e.description, e.permissions));
-    });
-
-    return roles;
-  }
-
-  /**
-   * Reaction Roles
-   */
+  /* Reaction Roles */
   ///Set Reaction Role Channel
   async setReactionRoleChannel(channelId: string, guildId: string) {
     await this.kittyGuildRepository.update(guildId, {

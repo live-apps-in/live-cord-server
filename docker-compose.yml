@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+  livecord-server:
+    build: .
+    image: live-cord-server
+    container_name: live-cord-server
+    ports:
+      - "5007:5000"
+    networks:
+    - kittychan-network
+    restart: always
+
+networks:
+  kittychan-network:
+    name: kittychan-network

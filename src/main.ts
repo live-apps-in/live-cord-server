@@ -46,7 +46,7 @@ client = new Client({
   sync: true,
   redisOptions: {
     db: 0,
-    host: '127.0.0.1',
+    host: process.env.REDIS_HOST,
     port: 6379,
     pass: process.env.REDIS_PASS,
   },

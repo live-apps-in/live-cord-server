@@ -10,7 +10,7 @@ export const kittyChangRPCOptions: ClientsModuleOptions = [
     options: {
       package: 'kitty_chan',
       protoPath: join(__dirname, '../proto/kitty_chan.proto'),
-      url: '0.0.0.0:5030',
+      url: process.env.KITTY_CHAN_GRPC_URL,
       credentials: grpc.credentials.createInsecure(),
     },
   },

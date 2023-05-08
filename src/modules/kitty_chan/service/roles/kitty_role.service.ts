@@ -55,7 +55,11 @@ export class KittyRolesService implements OnModuleInit {
   }
 
   ///Reaction Roles Action (SET, UPDATE, DELETE)
-  async reactionRolesAction(reaction_role_id: Types.ObjectId, action: string) {
+  async reactionRolesAction(
+    guildId: string,
+    reaction_role_id: Types.ObjectId,
+    action: string,
+  ) {
     const reaction_role = await this.kittyReactionRolesRepo.getById(
       reaction_role_id,
     );

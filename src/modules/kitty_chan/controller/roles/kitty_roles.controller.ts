@@ -15,21 +15,6 @@ export class KittyRolesController {
   ) {}
 
   /**
-   * Set Reaction Roles Channel
-   * @param {string} channelId - Discord channelId
-   */
-  @Patch('/reaction_roles/channel/:channelId')
-  async setReactionRoleChannel(
-    @Param('channelId') channelId: string,
-    @Param('guildId') guildId: string,
-  ) {
-    return await this.kittyRolesService.setReactionRoleChannel(
-      channelId,
-      guildId,
-    );
-  }
-
-  /**
    * Create Reaction Roles in LiveCord
    */
   @Post('/reaction_roles')
@@ -59,6 +44,7 @@ export class KittyRolesController {
   ) {
     reaction_role_id = new Types.ObjectId(reaction_role_id);
     return await this.kittyRolesService.reactionRolesAction(
+      guildId,
       reaction_role_id,
       action,
     );

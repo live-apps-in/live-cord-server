@@ -7,4 +7,8 @@ export class KittyDiscordService {
   async getGuildById(guildId: string) {
     return client.guild.fetch(guildId);
   }
+
+  async getGuildChannels(guildId: string) {
+    return client.guild.fetch(guildId);
+  }
 }

@@ -34,6 +34,17 @@ export class KittyGuildService {
 
     return this.kittyDiscordService.getGuildById(guildId);
   }
+  ///Guild
+  async getChannels(userId: Types.ObjectId, guildId: string) {
+    ///Validate Permission
+    const fetchPermission = await this.fetchPermission(userId, guildId);
+
+    if (!fetchPermission.hasPermission) {
+      throw new HttpException({ error: fetchPermission.error }, 400);
+    }
+
+    return this.kittyDiscordService.getGuildChannels(guildId);
+  }
 
   ///Find Guilds under a user and map permissions
   async get_guild_by_userId(userId: Types.ObjectId) {
@@ -93,12 +104,6 @@ export class KittyGuildService {
     });
 
     return await editFeature;
-  }
-
-  /**Emojis */
-  async getGuildEmojis(userId: Types.ObjectId, guildId: string) {
-    const emojis = await this.discordAPIService.getGuildEmojis(guildId);
-    return { emojis };
   }
 
   //**Admin**//

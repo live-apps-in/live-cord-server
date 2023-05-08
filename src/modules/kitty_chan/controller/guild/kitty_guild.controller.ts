@@ -24,6 +24,13 @@ export class KittyGuildController {
     return await this.guildConfigService.getProfile(userId, params.guildId);
   }
 
+  ///View Guild Profile
+  @Get('/:guildId/channels')
+  async guild_channels(@Request() req: Req, @Param() params: any) {
+    const { userId } = req.userData;
+    return await this.guildConfigService.getChannels(userId, params.guildId);
+  }
+
   //**Features**//
   @Patch('/features')
   async edit_guild_feature(@Request() req: Req) {

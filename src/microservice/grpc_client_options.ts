@@ -2,7 +2,7 @@ import * as grpc from '@grpc/grpc-js';
 import { ClientsModuleOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
 
-// Same options object used by microservice server
+/**kitty chan Domain gRPC client config */
 export const kittyChangRPCOptions: ClientsModuleOptions = [
   {
     name: 'kitty_chan_grpc',

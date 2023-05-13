@@ -65,17 +65,11 @@ export class KittyRolesService implements OnModuleInit {
     );
     if (!reaction_role) throw new HttpException('Reaction Role not found', 400);
 
-    const { config } = await this.kittyGuildRepository.getByGuildId(
-      reaction_role.guildId,
-    );
-    if (!config?.reaction_roles_channel)
-      throw new HttpException('Reaction Role channel not set', 400);
-
     const reactionRoleAction: any = await this.grpcReactionRolesService
       .reactionRolesAction({
         name: reaction_role.name,
         action,
-        channelId: config.reaction_roles_channel,
+        channelId: reaction_role.channelId,
         guildId: reaction_role.guildId,
         discordEmbedConfig: reaction_role.discordEmbedConfig,
         rolesMapping: reaction_role.rolesMapping,

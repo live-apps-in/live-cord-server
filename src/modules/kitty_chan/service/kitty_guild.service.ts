@@ -7,7 +7,6 @@ import { EditKittyGuildAdminDto } from 'src/modules/kitty_chan/_dto/KittyGuildAd
 import { UserRepository } from 'src/modules/users/repository/users.repository';
 import { BOTS } from 'src/core/constants';
 import { AxiosService } from 'src/shared/axios.service';
-import { DiscordAPIService } from 'src/shared/discord_api.service';
 import { KittyDiscordService } from 'src/modules/kitty_chan/shared/@live-apps-discord/service/kitty_discord.service';
 
 @Injectable()
@@ -17,8 +16,6 @@ export class KittyGuildService {
     @Inject(UserRepository) private readonly userRepo: UserRepository,
     @Inject(KittyGuildRepository)
     private readonly guildRepo: KittyGuildRepository,
-    @Inject(DiscordAPIService)
-    private readonly discordAPIService: DiscordAPIService,
     @Inject(KittyDiscordService)
     private readonly kittyDiscordService: KittyDiscordService,
   ) {}
